@@ -1,0 +1,27 @@
+@import '../sprites/icons.scss';
+
+i.icon {
+    display: inline-block;
+    @each $icon in $spritesheet-sprites {
+        $icon-name: nth($icon, 10);
+        &.icon-#{$icon-name} {
+            @include sprite($icon);
+        }
+    }
+}
+
+.box {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-flow: column wrap;
+}
+
+h1 {
+    color: royalblue;
+    text-align: center;
+}
+
+@import '~bpmn-js/assets/bpmn-font/css/bpmn.css';
+@import '~bpmn-js/assets/bpmn-font/css/bpmn-embedded.css';
+@import '~diagram-js/assets/diagram-js.css';
