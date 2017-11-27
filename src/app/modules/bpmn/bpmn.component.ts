@@ -2,7 +2,6 @@ import { Component, OnInit, ElementRef } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { BpmnService } from '../../services/bpmn.service';
 
-import initialXML from './resource/initial.bpmn';
 import pizzaXML from './resource/pizza-collaboration.bpmn';
 
 @Component({
@@ -23,10 +22,15 @@ export class BpmnComponent implements OnInit {
 
     ngOnInit() { }
 
+    ngOnDestroy() {
+        this.viewer.destroy();
+    }
+
     ngAfterViewInit() {
         let BpmnViewer = this.bpmnService.getViewer();
         let BpmnModeler = this.bpmnService.getModeler();
         let minimapModule = this.bpmnService.getMinimap();
+        console.log('BpmnModeler: ', BpmnModeler);
         // this.viewer = new BpmnViewer({ container: '#canvas' });
         this.viewer = new BpmnModeler({
             container: '#canvas',
@@ -34,13 +38,19 @@ export class BpmnComponent implements OnInit {
                 minimapModule
             ]
         });
-        this.viewer.importXML(initialXML, err => {
+        // this.viewer.createDiagram();
+        this.viewer.importXML(pizzaXML, err => {
             if (err) {
-                console.log('error rendering', err);
-            } else {
-                console.log('rendered');
+                return console.log('error rendering', err);
             }
+
+            let canvas = this.viewer.get('canvas');
+            let overlays = this.viewer.get('overlays');
+
+            // zoom to fit full viewport
+            canvas.zoom('fit-viewport');
         });
+        console.log(this.viewer._modelingModules);
     }
     
 }
