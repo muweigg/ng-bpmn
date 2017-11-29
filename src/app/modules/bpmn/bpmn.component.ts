@@ -1,6 +1,9 @@
-import { Component, OnInit, ElementRef } from '@angular/core';
+import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { BpmnService } from '../../services/bpmn.service';
+
+import $ from 'jquery';
+import debounce from 'lodash/function/debounce';
 
 import pizzaXML from './resource/pizza-collaboration.bpmn';
 
@@ -12,7 +15,11 @@ import pizzaXML from './resource/pizza-collaboration.bpmn';
 export class BpmnComponent implements OnInit {
 
     viewer: any;
+    modeler: any;
     title: String = "BPMN !";
+
+    @ViewChild('downloadDiagram') downloadDiagram: ElementRef;
+    @ViewChild('downloadSVG') downloadSVG: ElementRef;
 
     constructor(
         private wfElement: ElementRef,
@@ -27,19 +34,21 @@ export class BpmnComponent implements OnInit {
     }
 
     ngAfterViewInit() {
-        let BpmnViewer = this.bpmnService.getViewer();
-        let BpmnModeler = this.bpmnService.getModeler();
-        let minimapModule = this.bpmnService.getMinimap();
-        console.log('BpmnModeler: ', BpmnModeler);
-        // this.viewer = new BpmnViewer({ container: '#canvas' });
-        this.viewer = new BpmnModeler({
+        let minimapModule = this.bpmnService.getMinimapModule();
+        let options = {
             container: '#canvas',
             additionalModules: [
                 minimapModule
             ]
-        });
-        // this.viewer.createDiagram();
-        this.viewer.importXML(pizzaXML, err => {
+        };
+
+        // this.viewer = this.bpmnService.getViewerInstance(options);
+        this.modeler = this.bpmnService.getModelerInstance(options);
+
+        // console.log('this.modeler: ', this.viewer);
+        console.log('this.modeler: ', this.modeler);
+
+        this.modeler.importXML(pizzaXML, err => {
             if (err) {
                 return console.log('error rendering', err);
             }
@@ -50,7 +59,39 @@ export class BpmnComponent implements OnInit {
             // zoom to fit full viewport
             canvas.zoom('fit-viewport');
         });
-        console.log(this.viewer._modelingModules);
+        
+        let exportArtifacts: any = debounce(() => {
+            this.saveSVG((err, svg) => {
+                this.setEncoded(this.downloadSVG.nativeElement, 'diagram.svg', err ? null : svg);
+            });
+            this.saveDiagram((err, xml) => {
+                this.setEncoded(this.downloadDiagram.nativeElement, 'diagram.bpmn', err ? null : xml);
+            });
+        }, 500);
+
+        this.modeler.on('commandStack.changed', exportArtifacts);
     }
+
+    setEncoded(link, name, data) {
+        var encodedData = encodeURIComponent(data);
     
+        if (data) {
+            $(link).addClass('active').attr({
+                'href': 'data:application/bpmn20-xml;charset=UTF-8,' + encodedData,
+                'download': name
+            });
+        } else {
+            $(link).removeClass('active');
+        }
+    }
+
+    saveSVG (done) {
+        this.modeler.saveSVG(done);
+    }
+      
+    saveDiagram (done) {
+        this.modeler.saveXML({ format: true }, function(err, xml) {
+            done(err, xml);
+        });
+    }
 }

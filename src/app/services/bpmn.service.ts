@@ -9,15 +9,15 @@ export class BpmnService {
 
     constructor () {}
 
-    getViewer () {
-        return BpmnViewer;
+    getViewerInstance (options) {
+        return new BpmnViewer(options);
     }
     
-    getModeler () {
-        return BpmnModeler;
+    getModelerInstance (options) {
+        return new BpmnModeler(options);
     }
 
-    getMinimap () {
+    getMinimapModule () {
         return MinimapModule;
     }
 }
