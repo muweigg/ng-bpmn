@@ -10,7 +10,7 @@ const tmlConfig = require('./resource/tml.json');
 import newDiagramXML from './resource/new-diagram.bpmn';
 
 import pizzaXML from './resource/pizza-collaboration.bpmn';
-import testXML from './resource/test.bpmn';
+// import testXML from './resource/test.bpmn';
 
 @Component({
     selector: 'bpmn',
@@ -54,7 +54,7 @@ export class BpmnComponent implements OnInit {
         // this.viewer = this.bpmnService.getViewerInstance(options);
         this.viewer = this.bpmnService.getModelerInstance(options);
 
-        this.viewer.importXML(testXML, err => {
+        this.viewer.importXML(newDiagramXML, err => {
             if (err) {
                 return console.log('error rendering', err);
             }
