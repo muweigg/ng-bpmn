@@ -1,6 +1,18 @@
 <div class="box">
     {{ title }}
     
+    <button (click)="newDiagram();">
+        new BPMN diagram
+    </button>
+    
+    <button (click)="loadXML();">
+        load XML BPMN diagram
+    </button>
+    
+    <button (click)="exportXML();">
+        Export XML
+    </button>
+    
     <a #downloadDiagram href title="download BPMN diagram">
         BPMN diagram
     </a>

@@ -1,21 +1,23 @@
-import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
+import { Component, OnInit, ElementRef, ViewChild, ViewEncapsulation } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { BpmnService } from '../../services/bpmn.service';
 
 import $ from 'jquery';
 import debounce from 'lodash/function/debounce';
 
+import newDiagramXML from './resource/new-diagram.bpmn';
 import pizzaXML from './resource/pizza-collaboration.bpmn';
+import testXML from './resource/test.bpmn';
 
 @Component({
     selector: 'bpmn',
     templateUrl: './bpmn.component.html',
-    styleUrls: ['./bpmn.component.scss']
+    styleUrls: ['./bpmn.component.scss'],
+    encapsulation: ViewEncapsulation.None
 })
 export class BpmnComponent implements OnInit {
 
     viewer: any;
-    modeler: any;
     title: String = "BPMN !";
 
     @ViewChild('downloadDiagram') downloadDiagram: ElementRef;
@@ -27,13 +29,13 @@ export class BpmnComponent implements OnInit {
         private bpmnService: BpmnService
     ) { }
 
-    ngOnInit() { }
+    ngOnInit () { }
 
-    ngOnDestroy() {
-        this.viewer.destroy();
+    ngOnDestroy () {
+        // this.viewer.destroy();
     }
 
-    ngAfterViewInit() {
+    ngAfterViewInit () {
         let minimapModule = this.bpmnService.getMinimapModule();
         let options = {
             container: '#canvas',
@@ -43,12 +45,9 @@ export class BpmnComponent implements OnInit {
         };
 
         // this.viewer = this.bpmnService.getViewerInstance(options);
-        this.modeler = this.bpmnService.getModelerInstance(options);
+        this.viewer = this.bpmnService.getModelerInstance(options);
 
-        // console.log('this.modeler: ', this.viewer);
-        console.log('this.modeler: ', this.modeler);
-
-        this.modeler.importXML(pizzaXML, err => {
+        this.viewer.importXML(testXML, err => {
             if (err) {
                 return console.log('error rendering', err);
             }
@@ -69,10 +68,38 @@ export class BpmnComponent implements OnInit {
             });
         }, 500);
 
-        this.modeler.on('commandStack.changed', exportArtifacts);
+        this.viewer.on('commandStack.changed', exportArtifacts);
     }
 
-    setEncoded(link, name, data) {
+    newDiagram () {
+        this.viewer.importXML(newDiagramXML, err => {
+            if (err) {
+                return console.log('error rendering', err);
+            }
+
+            let canvas = this.viewer.get('canvas');
+            let overlays = this.viewer.get('overlays');
+
+            // zoom to fit full viewport
+            canvas.zoom('fit-viewport');
+        });
+    }
+
+    loadXML () {
+        this.viewer.importXML(pizzaXML, err => {
+            if (err) {
+                return console.log('error rendering', err);
+            }
+
+            let canvas = this.viewer.get('canvas');
+            let overlays = this.viewer.get('overlays');
+
+            // zoom to fit full viewport
+            canvas.zoom('fit-viewport');
+        });
+    }
+
+    setEncoded (link, name, data) {
         var encodedData = encodeURIComponent(data);
     
         if (data) {
@@ -86,12 +113,18 @@ export class BpmnComponent implements OnInit {
     }
 
     saveSVG (done) {
-        this.modeler.saveSVG(done);
+        this.viewer.saveSVG(done);
     }
       
     saveDiagram (done) {
-        this.modeler.saveXML({ format: true }, function(err, xml) {
+        this.viewer.saveXML({ format: true }, function(err, xml) {
             done(err, xml);
+        });
+    }
+
+    exportXML () {
+        this.viewer.saveXML({ format: true }, function(err, xml) {
+            if (!err) console.log(xml);
         });
     }
 }

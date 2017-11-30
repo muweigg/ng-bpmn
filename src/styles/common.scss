@@ -10,18 +10,6 @@ i.icon {
     }
 }
 
-.box {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-flow: column wrap;
-}
-
-h1 {
-    color: royalblue;
-    text-align: center;
-}
-
 @import '~bpmn-js/assets/bpmn-font/css/bpmn.css';
 @import '~bpmn-js/assets/bpmn-font/css/bpmn-embedded.css';
 @import '~diagram-js/assets/diagram-js.css';
