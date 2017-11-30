@@ -1,0 +1,25 @@
+{
+    "name": "TMLConfig",
+    "uri": "http://tml",
+    "prefix": "tml",
+    "xml": {
+        "tagAlias": "lowerCase"
+    },
+    "types": [
+        {
+            "name": "Details",
+            "superClass": [
+                "Element"
+            ],
+            "properties": [
+                {
+                    "name": "data",
+                    "isAttr": true,
+                    "type": "String"
+                }
+            ]
+        }
+    ],
+    "emumerations": [],
+    "associations": []
+}

@@ -2,10 +2,13 @@ import { Component, OnInit, ElementRef, ViewChild, ViewEncapsulation } from '@an
 import { HttpClient } from '@angular/common/http';
 import { BpmnService } from '../../services/bpmn.service';
 
-import $ from 'jquery';
+import 'script-loader!babel-loader!x2js/x2js.js';
+
 import debounce from 'lodash/function/debounce';
 
+const tmlConfig = require('./resource/tml.json');
 import newDiagramXML from './resource/new-diagram.bpmn';
+
 import pizzaXML from './resource/pizza-collaboration.bpmn';
 import testXML from './resource/test.bpmn';
 
@@ -19,6 +22,7 @@ export class BpmnComponent implements OnInit {
 
     viewer: any;
     title: String = "BPMN !";
+    tmlDetails: any;
 
     @ViewChild('downloadDiagram') downloadDiagram: ElementRef;
     @ViewChild('downloadSVG') downloadSVG: ElementRef;
@@ -41,7 +45,10 @@ export class BpmnComponent implements OnInit {
             container: '#canvas',
             additionalModules: [
                 minimapModule
-            ]
+            ],
+            moddleExtensions: {
+              tml: tmlConfig
+            }
         };
 
         // this.viewer = this.bpmnService.getViewerInstance(options);
@@ -59,7 +66,43 @@ export class BpmnComponent implements OnInit {
             canvas.zoom('fit-viewport');
         });
         
-        let exportArtifacts: any = debounce(() => {
+        this.viewer.on('commandStack.changed', this.exportArtifacts());
+        
+        this.viewer.on('element.click', event => {
+            var element = event.element,
+                moddle = this.viewer.get('moddle'),
+                businessObject = element.businessObject;
+
+            console.log(businessObject);
+
+            if (!element.parent) {
+                return;
+            }
+
+            this.tmlDetails = this.getExtension(businessObject, 'tml:Details');
+
+            if (!this.tmlDetails) {
+                this.tmlDetails = moddle.create('tml:Details');
+                businessObject.extensionElements = businessObject.extensionElements || moddle.create('bpmn:ExtensionElements');
+                businessObject.extensionElements.get('values').push(this.tmlDetails);
+            }
+
+            this.tmlDetails.data = JSON.stringify({name: 'aaa'});
+        });
+    }
+    
+    getExtension(element, type) {
+        if (!element.extensionElements) {
+            return null;
+        }
+
+        return element.extensionElements.values.filter(function(e) {
+            return e.$instanceOf(type);
+        })[0];
+    }
+
+    exportArtifacts () {
+        return debounce(() => {
             this.saveSVG((err, svg) => {
                 this.setEncoded(this.downloadSVG.nativeElement, 'diagram.svg', err ? null : svg);
             });
@@ -67,10 +110,43 @@ export class BpmnComponent implements OnInit {
                 this.setEncoded(this.downloadDiagram.nativeElement, 'diagram.bpmn', err ? null : xml);
             });
         }, 500);
-
-        this.viewer.on('commandStack.changed', exportArtifacts);
     }
 
+    setEncoded (link, name, data) {
+        var encodedData = encodeURIComponent(data);
+    
+        if (data) {
+            link.classList.add('active');
+            link.href = `data:application/bpmn20-xml;charset=UTF-8,${encodedData}`;
+            link.download = name
+        } else {
+            link.classList.remove('active');
+        }
+    }
+
+    saveSVG (done) {
+        this.viewer.saveSVG(done);
+    }
+      
+    saveDiagram (done) {
+        this.viewer.saveXML({ format: true }, function(err, xml) {
+            done(err, xml);
+        });
+    }
+
+    exportXML () {
+        this.viewer.saveXML({ format: true }, function(err, xml) {
+            if (!err) console.log(xml);
+        });
+    }
+    
+    exportJSON () {
+        this.viewer.saveXML({ format: true }, (err, xml) => {
+            let x2js = new X2JS();
+            if (!err) console.log(x2js.xml2js(xml));
+        });
+    }
+    
     newDiagram () {
         this.viewer.importXML(newDiagramXML, err => {
             if (err) {
@@ -96,35 +172,6 @@ export class BpmnComponent implements OnInit {
 
             // zoom to fit full viewport
             canvas.zoom('fit-viewport');
-        });
-    }
-
-    setEncoded (link, name, data) {
-        var encodedData = encodeURIComponent(data);
-    
-        if (data) {
-            $(link).addClass('active').attr({
-                'href': 'data:application/bpmn20-xml;charset=UTF-8,' + encodedData,
-                'download': name
-            });
-        } else {
-            $(link).removeClass('active');
-        }
-    }
-
-    saveSVG (done) {
-        this.viewer.saveSVG(done);
-    }
-      
-    saveDiagram (done) {
-        this.viewer.saveXML({ format: true }, function(err, xml) {
-            done(err, xml);
-        });
-    }
-
-    exportXML () {
-        this.viewer.saveXML({ format: true }, function(err, xml) {
-            if (!err) console.log(xml);
         });
     }
 }
