@@ -43,9 +43,15 @@
         // task
         &.bpmn-icon-send,
         &.bpmn-icon-receive,
+        &.bpmn-icon-user,
+        &.bpmn-icon-manual,
         &.bpmn-icon-business-rule,
+        &.bpmn-icon-service,
+        &.bpmn-icon-script,
         &.bpmn-icon-call-activity,
         &.bpmn-icon-transaction,
+        // &.bpmn-icon-subprocess-collapsed,
+        // &.bpmn-icon-subprocess-expanded,
         &.bpmn-icon-event-subprocess-expanded {
             display: none !important;
         }
