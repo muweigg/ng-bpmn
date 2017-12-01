@@ -147,30 +147,73 @@ export class BpmnComponent implements OnInit {
             // if (!err) console.log(x2js.xml2js(xml));
             let xmlDom = this.parser.parseFromString(xml, 'application/xml');
             // console.log(xmlDom.childNodes[0].childNodes);
-            this.preprocess(xmlDom.children[0].children);
+            
             console.log(this.bpmnIdDict);
+            console.log(this.preprocess(xmlDom.children[0].children));
+            console.log(this.buildJSON(this.preprocess(xmlDom.children[0].children)));
         });
     }
 
-    preprocess (nodeList: NodeList) {
+    preprocess (nodeList: NodeList, index: any = {}) {
         let list = Array.prototype.slice.call(nodeList);
         for (let node of list) {
             if (node.nodeName === 'bpmn:process'
-                || node.nodeName === 'bpmn:subProcess') this.preprocess(node.children);
+                || node.nodeName === 'bpmn:subProcess') this.preprocess(node.children, index);
+
             if (node.nodeName === 'bpmn:startEvent'
                 || node.nodeName === 'bpmn:endEvent'
                 || node.nodeName === 'bpmn:task'
                 || node.nodeName === 'bpmn:exclusiveGateway'
                 || node.nodeName === 'bpmn:parallelGateway'
                 || node.nodeName === 'bpmn:sequenceFlow') {
+
                 this.bpmnIdDict[node.id] = node;
+                    
+                let bsObject = {};
+                bsObject['bpmnId'] = node.id;
+                bsObject['type'] = node.nodeName;
+
+                if (node.nodeName === 'bpmn:startEvent' && node.parentElement.nodeName === 'bpmn:process') bsObject['root'] = true;
+
+                if (node.children.length > 0) {
+                    let children = Array.prototype.slice.call(node.children);
+
+                    let incoming = children.filter(child => {
+                        if (child.nodeName === 'bpmn:incoming') return child.innerHTML;
+                    }).map(incoming => incoming.innerHTML);
+
+                    let outgoing = children.filter(child => {
+                        if (child.nodeName === 'bpmn:outgoing') return child;
+                    }).map(outgoing => outgoing.innerHTML);
+
+                    if (incoming.length > 0) bsObject['incoming'] = incoming;
+                    if (outgoing.length > 0) bsObject['outgoing'] = outgoing;
+                }
+                index[node.id] = bsObject;
             }
         }
-        return ;
+        return index;
     }
 
-    buildJSON (root: Node) {
+    buildJSON (index: any = {}) {
+        let startEvent = null;
 
+        for (let key in index) {
+
+            let bsO = index[key];
+
+            if (bsO.incoming && bsO.incoming.length > 0) {
+                bsO.incoming = bsO.incoming.map(id => index[id]);
+            }
+            
+            if (bsO.outgoing && bsO.outgoing.length > 0) {
+                bsO.outgoing = bsO.outgoing.map(id => index[id]);
+            }
+
+            if (bsO.root) startEvent = bsO;
+        }
+
+        return startEvent;
     }
     
     newDiagram () {
