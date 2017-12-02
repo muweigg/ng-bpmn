@@ -14,7 +14,6 @@ export class PageViewerComponent implements OnInit {
 
     @ViewChild('bpmnViewer') bpmnViewer: BpmnComponent;
 
-    xml: string = '';
     businessObject: any;
 
     constructor() { }
@@ -22,7 +21,7 @@ export class PageViewerComponent implements OnInit {
     ngOnInit() { }
 
     loadTestXML () {
-        this.xml = testXML;
+        this.bpmnViewer.loadXML(testXML);
     }
     
     newDiagram () {

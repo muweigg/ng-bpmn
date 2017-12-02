@@ -14,7 +14,6 @@ export class PageModelerComponent implements OnInit {
 
     @ViewChild('bpmnModeler') bpmnModeler: BpmnComponent;
 
-    xml: string = '';
     businessObject: any;
 
     constructor() { }
@@ -22,7 +21,7 @@ export class PageModelerComponent implements OnInit {
     ngOnInit() { }
 
     loadTestXML () {
-        this.xml = testXML;
+        this.bpmnModeler.loadXML(testXML);
     }
     
     newDiagram () {

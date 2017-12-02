@@ -17,7 +17,6 @@ import newDiagramXML from './resource/new-diagram.bpmn';
 })
 export class BpmnComponent implements OnInit {
 
-    @Input() xml: string = '';
     @Input() modeler: boolean = false;
     @Output() onClick: EventEmitter<any> = new EventEmitter<any>();
     @ViewChild('downloadDiagram') downloadDiagram: ElementRef;
@@ -40,16 +39,7 @@ export class BpmnComponent implements OnInit {
     }
 
     ngOnChanges(changes: SimpleChanges) {
-        
-        if (changes.xml) {
-            if (changes.xml.currentValue !== '')
-                if (this.viewer) this.loadXML();
-        }
-
-        if (changes.modeler) {
-            this.setDefault(changes, 'modeler');
-        }
-
+        if (changes.modeler) this.setDefault(changes, 'modeler');
     }
 
     ngAfterViewInit () {
@@ -64,13 +54,11 @@ export class BpmnComponent implements OnInit {
             }
         };
         
-        this.xml = this.xml === '' ? newDiagramXML : this.xml;
-
         this.viewer = this.modeler
             ? this.bpmnService.getModelerInstance(options)
             : this.bpmnService.getViewerInstance(options);
 
-        this.viewer.importXML(this.xml, err => {
+        this.viewer.importXML(newDiagramXML, err => {
             if (err) return console.log('error rendering', err);
             let canvas = this.viewer.get('canvas');
             // zoom to fit full viewport
@@ -246,8 +234,8 @@ export class BpmnComponent implements OnInit {
         });
     }
 
-    loadXML () {
-        this.viewer.importXML(this.xml, err => {
+    loadXML (xml) {
+        this.viewer.importXML(xml, err => {
             if (err) return console.log('error rendering', err);
             let canvas = this.viewer.get('canvas');
             // zoom to fit full viewport
