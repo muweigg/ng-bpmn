@@ -1,6 +1,6 @@
-import { Component, OnInit, ElementRef, ViewChild, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, ElementRef, ViewChild, ViewEncapsulation, Input, SimpleChanges, Output, EventEmitter } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { BpmnService } from '../../services/bpmn.service';
+import { BpmnService } from './service/bpmn.service';
 
 // import 'script-loader!babel-loader!x2js/x2js.js';
 
@@ -9,29 +9,27 @@ import debounce from 'lodash/function/debounce';
 const tmlConfig = require('./resource/tml.json');
 import newDiagramXML from './resource/new-diagram.bpmn';
 
-import pizzaXML from './resource/pizza-collaboration.bpmn';
-import testXML from './resource/test.bpmn';
-
 @Component({
     selector: 'bpmn',
     templateUrl: './bpmn.component.html',
     styleUrls: ['./bpmn.component.scss'],
-    encapsulation: ViewEncapsulation.None
+    // encapsulation: ViewEncapsulation.None
 })
 export class BpmnComponent implements OnInit {
 
-    viewer: any;
-    title: String = "BPMN !";
-    tmlDetails: any;
-
+    @Input() xml: string = '';
+    @Input() modeler: boolean = false;
+    @Output() onClick: EventEmitter<any> = new EventEmitter<any>();
+    @Output() onChanged: EventEmitter<any> = new EventEmitter<any>();
     @ViewChild('downloadDiagram') downloadDiagram: ElementRef;
     @ViewChild('downloadSVG') downloadSVG: ElementRef;
-
+    
     parser: DOMParser = new DOMParser();
-    bpmnNodeIndex: any = {};
+    viewer: any;
+    tmlDetails: any;
+    bpmnNodeIndex: any = {};    
 
     constructor(
-        private wfElement: ElementRef,
         private http: HttpClient,
         private bpmnService: BpmnService
     ) { }
@@ -42,10 +40,23 @@ export class BpmnComponent implements OnInit {
         // this.viewer.destroy();
     }
 
+    ngOnChanges(changes: SimpleChanges) {
+        
+        if (changes.xml) {
+            if (changes.xml.currentValue !== '')
+                if (this.viewer) this.loadXML();
+        }
+
+        if (changes.modeler) {
+            this.setDefault(changes, 'modeler');
+        }
+
+    }
+
     ngAfterViewInit () {
         let minimapModule = this.bpmnService.getMinimapModule();
         let options = {
-            container: '#canvas',
+            container: '#bpmn-canvas',
             additionalModules: [
                 minimapModule
             ],
@@ -53,15 +64,16 @@ export class BpmnComponent implements OnInit {
               tml: tmlConfig
             }
         };
+        
+        this.xml = this.xml === '' ? newDiagramXML : this.xml;
 
-        // this.viewer = this.bpmnService.getViewerInstance(options);
-        this.viewer = this.bpmnService.getModelerInstance(options);
+        this.viewer = this.modeler
+            ? this.bpmnService.getModelerInstance(options)
+            : this.bpmnService.getViewerInstance(options);
 
-        this.viewer.importXML(newDiagramXML, err => {
+        this.viewer.importXML(this.xml, err => {
             if (err) return console.log('error rendering', err);
-
             let canvas = this.viewer.get('canvas');
-
             // zoom to fit full viewport
             canvas.zoom('fit-viewport');
         });
@@ -73,12 +85,7 @@ export class BpmnComponent implements OnInit {
                 moddle = this.viewer.get('moddle'),
                 businessObject = element.businessObject;
 
-            // console.log(JSON.stringify(businessObject, null, 2));
-            console.log(businessObject);
-
-            if (!element.parent) {
-                return;
-            }
+            if (!element.parent) return;
 
             this.tmlDetails = this.getExtension(businessObject, 'tml:Details');
 
@@ -88,8 +95,19 @@ export class BpmnComponent implements OnInit {
                 businessObject.extensionElements.get('values').push(this.tmlDetails);
             }
 
+            this.onClick.emit({
+                businessObject,
+                "tmlDetails": this.tmlDetails
+            });
+
             // this.tmlDetails.data = JSON.stringify({});
         });
+    }
+    
+    setDefault (changes, name: any, defaultVal: any = true, type: any = 'boolean') {
+        this[name] = typeof changes[name].currentValue === type
+            ? changes[name].currentValue
+            : defaultVal;
     }
     
     getExtension(element, type) {
@@ -130,26 +148,24 @@ export class BpmnComponent implements OnInit {
     }
       
     saveDiagram (done) {
-        this.viewer.saveXML({ format: true }, function(err, xml) {
-            done(err, xml);
-        });
+        this.viewer.saveXML({ format: true }, (err, xml) => done(err, xml));
     }
-
+    
     exportXML () {
-        this.viewer.saveXML({ format: true }, function(err, xml) {
-            if (!err) console.log(xml);
+        let xxml:any = null;
+        this.viewer.saveXML({ format: true }, (err, xml) => {
+            if (!err) xxml = xml;
         });
+        return xxml;
     }
     
     exportJSON () {
+        let json:any = null;
         this.viewer.saveXML({ format: true }, (err, xml) => {
-            // let x2js = new X2JS();
-            // if (!err) console.log(x2js.xml2js(xml));
             let xmlDom = this.parser.parseFromString(xml, 'application/xml');
-            // console.log(xmlDom.childNodes[0].childNodes);
-            
-            console.log(this.buildJSON(this.preprocess(xmlDom.children[0].children)));
+            json = this.buildJSON(this.preprocess(xmlDom.children[0].children));
         });
+        return json;
     }
 
     preprocess (nodeList: NodeList, index: any = {}) {
@@ -234,35 +250,20 @@ export class BpmnComponent implements OnInit {
 
         return { startEvent };
     }
-    
+
     newDiagram () {
         this.viewer.importXML(newDiagramXML, err => {
             if (err) return console.log('error rendering', err);
-
             let canvas = this.viewer.get('canvas');
-
             // zoom to fit full viewport
             canvas.zoom('fit-viewport');
         });
     }
 
     loadXML () {
-        this.viewer.importXML(pizzaXML, err => {
+        this.viewer.importXML(this.xml, err => {
             if (err) return console.log('error rendering', err);
-
             let canvas = this.viewer.get('canvas');
-
-            // zoom to fit full viewport
-            canvas.zoom('fit-viewport');
-        });
-    }
-    
-    loadTestXML () {
-        this.viewer.importXML(testXML, err => {
-            if (err) return console.log('error rendering', err);
-
-            let canvas = this.viewer.get('canvas');
-
             // zoom to fit full viewport
             canvas.zoom('fit-viewport');
         });

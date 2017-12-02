@@ -1,19 +1,19 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { HttpClientModule } from '@angular/common/http'
-import { BpmnRoutingModule, bpmnRoutingComponents } from './bpmn-routing.module';
-import { BpmnService } from '../../services/bpmn.service';
+import { HttpClientModule } from '@angular/common/http';
+import { BpmnService } from './service/bpmn.service';
+import { BpmnComponent } from './bpmn.component';
 
 @NgModule({
     declarations: [
-        bpmnRoutingComponents
+        BpmnComponent,
     ],
     imports: [
         CommonModule,
         HttpClientModule,
-        BpmnRoutingModule
     ],
-    exports: [],
+    exports: [ HttpClientModule, BpmnComponent ],
+    entryComponents: [ BpmnComponent ],
     providers: [ BpmnService ],
 })
 export class BpmnModule {}

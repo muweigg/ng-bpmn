@@ -1,33 +1,11 @@
-<div class="box">
-    {{ title }}
+<div id="bpmn-canvas"></div>
     
-    <button (click)="loadTestXML();">
-        load Test XML BPMN diagram
-    </button>
-    
-    <button (click)="newDiagram();">
-        new BPMN diagram
-    </button>
-    
-    <button (click)="loadXML();">
-        load XML BPMN diagram
-    </button>
-    
-    <button (click)="exportXML();">
-        Export XML
-    </button>
-    
-    <button (click)="exportJSON();">
-        Export JSON
-    </button>
-    
-    <a #downloadDiagram href title="download BPMN diagram">
+<div id="bpmn-downloads">
+    <a #downloadDiagram href="javascript:" title="download BPMN diagram">
         download BPMN diagram
     </a>
 
-    <a #downloadSVG href title="download as SVG image">
+    <a #downloadSVG href="javascript:" title="download as SVG image">
         download SVG image
     </a>
-
-    <div id="canvas"></div>
 </div>

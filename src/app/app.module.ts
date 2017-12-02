@@ -11,6 +11,7 @@ import { take } from 'rxjs/operators/take';
 
 import { AppComponent } from './app.component';
 import { PageNotFoundComponent } from './components/404/page-not-found.component';
+import { BpmnModule } from './modules/bpmn/bpmn.module';
 
 @NgModule({
     imports: [
@@ -21,7 +22,8 @@ import { PageNotFoundComponent } from './components/404/page-not-found.component
         StoreModule.forRoot({
             // Add your reducers here
             
-        }, { metaReducers })
+        }, { metaReducers }),
+        BpmnModule,
     ],
     declarations: [
         appRoutingComponents,
