@@ -2,7 +2,7 @@ import { Component, OnInit, ElementRef, ViewChild, ViewEncapsulation } from '@an
 import { HttpClient } from '@angular/common/http';
 import { BpmnService } from '../../services/bpmn.service';
 
-import 'script-loader!babel-loader!x2js/x2js.js';
+// import 'script-loader!babel-loader!x2js/x2js.js';
 
 import debounce from 'lodash/function/debounce';
 
@@ -28,7 +28,7 @@ export class BpmnComponent implements OnInit {
     @ViewChild('downloadSVG') downloadSVG: ElementRef;
 
     parser: DOMParser = new DOMParser();
-    bpmnIdDict: any = {};
+    bpmnNodeIndex: any = {};
 
     constructor(
         private wfElement: ElementRef,
@@ -148,8 +148,6 @@ export class BpmnComponent implements OnInit {
             let xmlDom = this.parser.parseFromString(xml, 'application/xml');
             // console.log(xmlDom.childNodes[0].childNodes);
             
-            console.log(this.bpmnIdDict);
-            console.log(this.preprocess(xmlDom.children[0].children));
             console.log(this.buildJSON(this.preprocess(xmlDom.children[0].children)));
         });
     }
@@ -163,17 +161,23 @@ export class BpmnComponent implements OnInit {
             if (node.nodeName === 'bpmn:startEvent'
                 || node.nodeName === 'bpmn:endEvent'
                 || node.nodeName === 'bpmn:task'
+                || node.nodeName === 'bpmn:subProcess'
                 || node.nodeName === 'bpmn:exclusiveGateway'
                 || node.nodeName === 'bpmn:parallelGateway'
                 || node.nodeName === 'bpmn:sequenceFlow') {
 
-                this.bpmnIdDict[node.id] = node;
+                this.bpmnNodeIndex[node.id] = node;
                     
-                let bsObject = {};
-                bsObject['bpmnId'] = node.id;
-                bsObject['type'] = node.nodeName;
+                let bsO = {};
+                bsO['bpmnId'] = node.id;
+                bsO['type'] = node.nodeName;
 
-                if (node.nodeName === 'bpmn:startEvent' && node.parentElement.nodeName === 'bpmn:process') bsObject['root'] = true;
+                if (node.nodeName === 'bpmn:startEvent' && node.parentElement.nodeName === 'bpmn:process') bsO['root'] = true;
+
+                if (node.nodeName === 'bpmn:subProcess')
+                    bsO['startEvent'] = Array.prototype.slice.call(node.children)
+                        .filter(node => node.nodeName === 'bpmn:startEvent')
+                        .map(node => node.id);
 
                 if (node.children.length > 0) {
                     let children = Array.prototype.slice.call(node.children);
@@ -186,10 +190,10 @@ export class BpmnComponent implements OnInit {
                         if (child.nodeName === 'bpmn:outgoing') return child;
                     }).map(outgoing => outgoing.innerHTML);
 
-                    if (incoming.length > 0) bsObject['incoming'] = incoming;
-                    if (outgoing.length > 0) bsObject['outgoing'] = outgoing;
+                    if (incoming.length > 0) bsO['incoming'] = incoming;
+                    if (outgoing.length > 0) bsO['outgoing'] = outgoing;
                 }
-                index[node.id] = bsObject;
+                index[node.id] = bsO;
             }
         }
         return index;
@@ -203,17 +207,32 @@ export class BpmnComponent implements OnInit {
             let bsO = index[key];
 
             if (bsO.incoming && bsO.incoming.length > 0) {
-                bsO.incoming = bsO.incoming.map(id => index[id]);
+                bsO.incoming = bsO.incoming.map(id => {
+                    let node = this.bpmnNodeIndex[id];
+                    for (let attr of node.attributes) {
+                        if (attr.name === 'sourceRef')
+                            return index[attr.nodeValue];
+                    }
+                });
             }
             
             if (bsO.outgoing && bsO.outgoing.length > 0) {
-                bsO.outgoing = bsO.outgoing.map(id => index[id]);
+                bsO.outgoing = bsO.outgoing.map(id => {
+                    let node = this.bpmnNodeIndex[id];
+                    for (let attr of node.attributes) {
+                        if (attr.name === 'targetRef')
+                            return index[attr.nodeValue];
+                    }
+                });
             }
+            
+            if (bsO.type === 'bpmn:subProcess')
+                bsO.startEvent = index[bsO.startEvent];
 
             if (bsO.root) startEvent = bsO;
         }
 
-        return startEvent;
+        return { startEvent };
     }
     
     newDiagram () {
