@@ -6,7 +6,7 @@ import { BpmnService } from './service/bpmn.service';
 
 import debounce from 'lodash/function/debounce';
 
-const tmlConfig = require('./resource/tml.json');
+const tmlOptions = require('./resource/options.json');
 import newDiagramXML from './resource/new-diagram.bpmn';
 
 @Component({
@@ -20,7 +20,6 @@ export class BpmnComponent implements OnInit {
     @Input() xml: string = '';
     @Input() modeler: boolean = false;
     @Output() onClick: EventEmitter<any> = new EventEmitter<any>();
-    @Output() onChanged: EventEmitter<any> = new EventEmitter<any>();
     @ViewChild('downloadDiagram') downloadDiagram: ElementRef;
     @ViewChild('downloadSVG') downloadSVG: ElementRef;
     
@@ -61,7 +60,7 @@ export class BpmnComponent implements OnInit {
                 minimapModule
             ],
             moddleExtensions: {
-              tml: tmlConfig
+              tml: tmlOptions
             }
         };
         
@@ -87,20 +86,7 @@ export class BpmnComponent implements OnInit {
 
             if (!element.parent) return;
 
-            this.tmlDetails = this.getExtension(businessObject, 'tml:Details');
-
-            if (!this.tmlDetails) {
-                this.tmlDetails = moddle.create('tml:Details');
-                businessObject.extensionElements = businessObject.extensionElements || moddle.create('bpmn:ExtensionElements');
-                businessObject.extensionElements.get('values').push(this.tmlDetails);
-            }
-
-            this.onClick.emit({
-                businessObject,
-                "tmlDetails": this.tmlDetails
-            });
-
-            // this.tmlDetails.data = JSON.stringify({});
+            this.onClick.emit(businessObject);
         });
     }
     

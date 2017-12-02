@@ -1,5 +1,5 @@
 {
-    "name": "TMLConfig",
+    "name": "TMLOptions",
     "uri": "http://tml",
     "prefix": "tml",
     "xml": {
@@ -7,13 +7,13 @@
     },
     "types": [
         {
-            "name": "Details",
-            "superClass": [
-                "Element"
+            "name": "OptionsNode",
+            "extends": [
+                "bpmn:FlowNode"
             ],
             "properties": [
                 {
-                    "name": "data",
+                    "name": "options",
                     "isAttr": true,
                     "type": "String"
                 }

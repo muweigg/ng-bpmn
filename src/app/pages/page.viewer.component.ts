@@ -15,7 +15,7 @@ export class PageViewerComponent implements OnInit {
     @ViewChild('bpmnViewer') bpmnViewer: BpmnComponent;
 
     xml: string = '';
-    bpmnObject: any;
+    businessObject: any;
 
     constructor() { }
 
@@ -37,8 +37,7 @@ export class PageViewerComponent implements OnInit {
         console.log(this.bpmnViewer.exportJSON());
     }
 
-    openPanel (bpmnObject) {
-        this.bpmnObject = bpmnObject;
-        console.log(this.bpmnObject);
+    openPanel (businessObject) {
+        this.businessObject = businessObject;
     }
 }

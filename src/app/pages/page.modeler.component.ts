@@ -15,7 +15,7 @@ export class PageModelerComponent implements OnInit {
     @ViewChild('bpmnModeler') bpmnModeler: BpmnComponent;
 
     xml: string = '';
-    bpmnObject: any;
+    businessObject: any;
 
     constructor() { }
 
@@ -37,8 +37,7 @@ export class PageModelerComponent implements OnInit {
         console.log(this.bpmnModeler.exportJSON());
     }
     
-    openPanel (bpmnObject) {
-        this.bpmnObject = bpmnObject;
-        console.log(this.bpmnObject);
+    openPanel (businessObject) {
+        this.businessObject = businessObject;
     }
 }

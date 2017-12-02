@@ -3,32 +3,20 @@ export default `
 <bpmn:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:tml="http://tml" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn">
   <bpmn:process id="Process_1" isExecutable="false">
     <bpmn:startEvent id="StartEvent_1">
-      <bpmn:extensionElements>
-        <tml:details />
-      </bpmn:extensionElements>
       <bpmn:outgoing>SequenceFlow_0fj0zrc</bpmn:outgoing>
     </bpmn:startEvent>
     <bpmn:exclusiveGateway id="ExclusiveGateway_1kbxls2">
-      <bpmn:extensionElements>
-        <tml:details />
-      </bpmn:extensionElements>
       <bpmn:incoming>SequenceFlow_0fj0zrc</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_12fpb60</bpmn:outgoing>
       <bpmn:outgoing>SequenceFlow_15fvdzv</bpmn:outgoing>
     </bpmn:exclusiveGateway>
     <bpmn:sequenceFlow id="SequenceFlow_0fj0zrc" sourceRef="StartEvent_1" targetRef="ExclusiveGateway_1kbxls2" />
     <bpmn:task id="Task_14cfgdp" name="普通任务">
-      <bpmn:extensionElements>
-        <tml:details />
-      </bpmn:extensionElements>
       <bpmn:incoming>SequenceFlow_15fvdzv</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_0sofw42</bpmn:outgoing>
     </bpmn:task>
     <bpmn:sequenceFlow id="SequenceFlow_12fpb60" sourceRef="ExclusiveGateway_1kbxls2" targetRef="Task_0n9lj4c" />
     <bpmn:subProcess id="Task_0n9lj4c" name="子处理">
-      <bpmn:extensionElements>
-        <tml:details />
-      </bpmn:extensionElements>
       <bpmn:incoming>SequenceFlow_12fpb60</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_1mhsqln</bpmn:outgoing>
       <bpmn:startEvent id="StartEvent_1u8b44m">
@@ -36,45 +24,27 @@ export default `
       </bpmn:startEvent>
       <bpmn:sequenceFlow id="SequenceFlow_1h009ou" sourceRef="StartEvent_1u8b44m" targetRef="ExclusiveGateway_0trgzvx" />
       <bpmn:parallelGateway id="ExclusiveGateway_0trgzvx">
-        <bpmn:extensionElements>
-          <tml:details />
-        </bpmn:extensionElements>
         <bpmn:incoming>SequenceFlow_1h009ou</bpmn:incoming>
         <bpmn:outgoing>SequenceFlow_1aiq316</bpmn:outgoing>
         <bpmn:outgoing>SequenceFlow_0u6lugv</bpmn:outgoing>
       </bpmn:parallelGateway>
       <bpmn:task id="Task_0s46biu" name="并行任务1">
-        <bpmn:extensionElements>
-          <tml:details />
-        </bpmn:extensionElements>
         <bpmn:incoming>SequenceFlow_1aiq316</bpmn:incoming>
         <bpmn:outgoing>SequenceFlow_16w9oyo</bpmn:outgoing>
       </bpmn:task>
       <bpmn:sequenceFlow id="SequenceFlow_1aiq316" sourceRef="ExclusiveGateway_0trgzvx" targetRef="Task_0s46biu" />
       <bpmn:task id="Task_07qxgpe" name="并行任务2">
-        <bpmn:extensionElements>
-          <tml:details />
-        </bpmn:extensionElements>
         <bpmn:incoming>SequenceFlow_0u6lugv</bpmn:incoming>
         <bpmn:outgoing>SequenceFlow_1pe88h4</bpmn:outgoing>
       </bpmn:task>
       <bpmn:sequenceFlow id="SequenceFlow_0u6lugv" sourceRef="ExclusiveGateway_0trgzvx" targetRef="Task_07qxgpe" />
       <bpmn:endEvent id="EndEvent_0e2gsct">
-        <bpmn:extensionElements>
-          <tml:details />
-        </bpmn:extensionElements>
         <bpmn:incoming>SequenceFlow_1pe88h4</bpmn:incoming>
         <bpmn:incoming>SequenceFlow_16w9oyo</bpmn:incoming>
       </bpmn:endEvent>
       <bpmn:sequenceFlow id="SequenceFlow_1pe88h4" sourceRef="Task_07qxgpe" targetRef="EndEvent_0e2gsct">
-        <bpmn:extensionElements>
-          <tml:details />
-        </bpmn:extensionElements>
       </bpmn:sequenceFlow>
       <bpmn:sequenceFlow id="SequenceFlow_16w9oyo" sourceRef="Task_0s46biu" targetRef="EndEvent_0e2gsct">
-        <bpmn:extensionElements>
-          <tml:details />
-        </bpmn:extensionElements>
       </bpmn:sequenceFlow>
     </bpmn:subProcess>
     <bpmn:endEvent id="EndEvent_1r1ytw6">
