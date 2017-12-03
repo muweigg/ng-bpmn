@@ -3,6 +3,9 @@ import { Injectable } from "@angular/core";
 const BpmnViewer = require('bpmn-js');
 const BpmnModeler = require('bpmn-js/lib/Modeler');
 const MinimapModule = require('diagram-js-minimap');
+const TranslateModule = {
+    translate: [ 'value', require('../i18n/customTranslate/customTranslate') ]
+};
 
 @Injectable()
 export class BpmnService {
@@ -19,5 +22,9 @@ export class BpmnService {
 
     getMinimapModule () {
         return MinimapModule;
+    }
+
+    getTranslateModule () {
+        return TranslateModule;
     }
 }

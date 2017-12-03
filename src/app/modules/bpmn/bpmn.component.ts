@@ -2,8 +2,6 @@ import { Component, OnInit, ElementRef, ViewChild, ViewEncapsulation, Input, Sim
 import { HttpClient } from '@angular/common/http';
 import { BpmnService } from './service/bpmn.service';
 
-// import 'script-loader!babel-loader!x2js/x2js.js';
-
 import debounce from 'lodash/function/debounce';
 
 const tmlOptions = require('./resource/options.json');
@@ -44,10 +42,12 @@ export class BpmnComponent implements OnInit {
 
     ngAfterViewInit () {
         let minimapModule = this.bpmnService.getMinimapModule();
+        let translateModule = this.bpmnService.getTranslateModule();
         let options = {
             container: '#bpmn-canvas',
             additionalModules: [
-                minimapModule
+                minimapModule,
+                translateModule
             ],
             moddleExtensions: {
               tml: tmlOptions
@@ -71,9 +71,7 @@ export class BpmnComponent implements OnInit {
             var element = event.element,
                 moddle = this.viewer.get('moddle'),
                 businessObject = element.businessObject;
-
             if (!element.parent) return;
-
             this.onClick.emit(businessObject);
         });
     }
@@ -148,13 +146,7 @@ export class BpmnComponent implements OnInit {
             if (node.nodeName === 'bpmn:process'
                 || node.nodeName === 'bpmn:subProcess') this.preprocess(node.children, index);
 
-            if (node.nodeName === 'bpmn:startEvent'
-                || node.nodeName === 'bpmn:endEvent'
-                || node.nodeName === 'bpmn:task'
-                || node.nodeName === 'bpmn:subProcess'
-                || node.nodeName === 'bpmn:exclusiveGateway'
-                || node.nodeName === 'bpmn:parallelGateway'
-                || node.nodeName === 'bpmn:sequenceFlow') {
+            if (node.nodeName !== 'bpmn:process') {
 
                 this.bpmnNodeIndex[node.id] = node;
                     
