@@ -23,7 +23,6 @@ export class BpmnComponent implements OnInit {
     
     parser: DOMParser = new DOMParser();
     viewer: any;
-    tmlDetails: any;
     bpmnNodeIndex: any = {};    
 
     constructor(
