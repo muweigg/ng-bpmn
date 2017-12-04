@@ -1,8 +1,7 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
-
-import pizzaXML from '../testData/pizza-collaboration.bpmn';
-import testXML from '../testData/test.bpmn';
 import { BpmnComponent } from '../modules/bpmn/bpmn.component';
+
+import testXML from '../testData/test.bpmn';
 
 @Component({
     selector: 'page-viewer',
