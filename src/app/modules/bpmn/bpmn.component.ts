@@ -138,6 +138,7 @@ export class BpmnComponent implements OnInit {
             let xmlDom = this.parser.parseFromString(xml, 'application/xml');
             json = this.buildJSON(this.preprocess(xmlDom.children[0].children));
         });
+        console.log(this.bpmnNodeIndex);
         return json;
     }
 
@@ -153,6 +154,7 @@ export class BpmnComponent implements OnInit {
                     
                 let bsO = {};
                 bsO['bpmnId'] = node.id;
+                bsO['name'] = '';
                 bsO['type'] = node.nodeName;
 
                 if (node.nodeName === 'bpmn:startEvent' && node.parentElement.nodeName === 'bpmn:process') bsO['root'] = true;
@@ -179,11 +181,13 @@ export class BpmnComponent implements OnInit {
 
                 if (node.attributes.length > 1) {
                     let attributes = Array.prototype.slice.call(node.attributes);
-                    let attribute = attributes.filter(attr => attr.nodeName === 'tml:options')[0];
-                    if (attribute) {
-                        try { bsO['options'] = JSON.parse(attribute.nodeValue); }
-                        catch (e) { bsO['options'] = attribute.nodeValue; }
+                    let options = attributes.filter(attr => attr.nodeName === 'tml:options')[0];
+                    if (options) {
+                        try { bsO['options'] = JSON.parse(options.nodeValue); }
+                        catch (e) { bsO['options'] = options.nodeValue; }
                     }
+                    let name = attributes.filter(attr => attr.nodeName === 'name')[0];
+                    if (name) bsO['name'] = name.nodeValue;
                 }
 
                 index[node.id] = bsO;
