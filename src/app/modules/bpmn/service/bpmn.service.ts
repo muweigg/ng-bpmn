@@ -10,6 +10,7 @@ const TranslateModule = {
 const PaletteProviderModule = {
     paletteProvider: [ 'type', require('../palette/tml-palette-provider') ]
 };
+const TokenSimulationModule = require('bpmn-js-token-simulation/lib/viewer');
 const ReplaceMenuProviderModule = {};
 
 @Injectable()
@@ -27,6 +28,10 @@ export class BpmnService {
     
     getNavigatedViewerInstance (options) {
         return new BpmnNavigatedViewer(options);
+    }
+
+    getTokenSimulationModule () {
+        return TokenSimulationModule;
     }
 
     getMinimapModule () {

@@ -5,7 +5,7 @@ import { BpmnService } from './service/bpmn.service';
 import newDiagramXML from './resource/new-diagram.bpmn';
 const tmlOptions = require('./resource/tml-options.json');
 
-import debounce from 'lodash/function/debounce';
+import debounce from 'lodash/debounce';
 
 @Component({
     selector: 'bpmn',
@@ -46,13 +46,15 @@ export class BpmnComponent implements OnInit {
         let minimapModule = this.bpmnService.getMinimapModule();
         let translateModule = this.bpmnService.getTranslateModule();
         let paletteProviderModule = this.bpmnService.getPaletteProviderModule();
+        let tokenSimulationModule = this.bpmnService.getTokenSimulationModule();
         let options = {
             container: '#bpmn-canvas',
             keyboard: { bindTo: document },
             additionalModules: [
                 minimapModule,
                 translateModule,
-                paletteProviderModule
+                paletteProviderModule,
+                tokenSimulationModule,
             ],
             moddleExtensions: {
               tml: tmlOptions

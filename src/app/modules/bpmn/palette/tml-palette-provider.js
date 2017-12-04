@@ -1,6 +1,6 @@
 'use strict';
 
-var assign = require('lodash/object/assign');
+var assign = require('lodash/assign');
 
 /**
  * A palette provider for BPMN 2.0 elements.

@@ -38,7 +38,7 @@ module.exports = function(options) {
 
         resolve: {
             extensions: ['.ts', '.js'],
-            modules: [helpers.root('node_modules')],
+            // modules: [helpers.root('node_modules')],
             alias: rxPaths()
         },
 
