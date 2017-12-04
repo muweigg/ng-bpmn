@@ -20,12 +20,8 @@ export class PageViewerComponent implements OnInit {
 
     ngOnInit() { }
 
-    loadTestXML () {
+    ngAfterViewInit() {
         this.bpmnViewer.loadXML(testXML);
-    }
-    
-    newDiagram () {
-        this.bpmnViewer.newDiagram();
     }
 
     exportXML () {
