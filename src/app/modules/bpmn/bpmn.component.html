@@ -57,7 +57,7 @@
         <span class="app-icon-picture"></span>
     </a>
 
-    <a href="javascript:" (click)="toggleHideKeyboardShortcuts();">
+    <a href="javascript:" (click)="toggleHideKeyboardShortcuts();" [hidden]="!modeler">
         <span class="app-icon-keyboard"></span>
     </a>
 </div>
