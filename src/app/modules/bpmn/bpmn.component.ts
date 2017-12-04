@@ -19,6 +19,8 @@ export class BpmnComponent implements OnInit {
     @Output() onClick: EventEmitter<any> = new EventEmitter<any>();
     @ViewChild('downloadDiagram') downloadDiagram: ElementRef;
     @ViewChild('downloadSVG') downloadSVG: ElementRef;
+
+    hideKeyboardShortcuts: boolean = true;
     
     parser: DOMParser = new DOMParser();
     viewer: any;
@@ -236,5 +238,9 @@ export class BpmnComponent implements OnInit {
             // zoom to fit full viewport
             canvas.zoom('fit-viewport');
         });
+    }
+
+    toggleHideKeyboardShortcuts () {
+        this.hideKeyboardShortcuts = !this.hideKeyboardShortcuts;
     }
 }

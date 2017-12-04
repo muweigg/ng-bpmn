@@ -9,6 +9,7 @@ const TranslateModule = {
 const PaletteProviderModule = {
     paletteProvider: [ 'type', require('../palette/tml-palette-provider') ]
 };
+const ReplaceMenuProviderModule = {};
 
 @Injectable()
 export class BpmnService {
@@ -33,5 +34,9 @@ export class BpmnService {
     
     getPaletteProviderModule () {
         return PaletteProviderModule;
+    }
+    
+    getReplaceMenuProviderModule () {
+        return ReplaceMenuProviderModule;
     }
 }

@@ -1,11 +1,63 @@
 <div id="bpmn-canvas"></div>
-    
-<div id="bpmn-downloads">
+
+<div class="bpmn-keyboard-shortcuts"
+    [hidden]="hideKeyboardShortcuts"
+    (click)="toggleHideKeyboardShortcuts();">
+    <div>
+        <h1>Keyboard Shortcuts</h1>
+        <table>
+            <tbody>
+                <tr>
+                    <td>撤销</td>
+                    <td>Ctrl + Z</td>
+                </tr>
+                <tr>
+                    <td>前进</td>
+                    <td>Ctrl + ⇧ + Z</td>
+                </tr>
+                <tr>
+                    <td>全选</td>
+                    <td>Ctrl + A</td>
+                </tr>
+                <tr>
+                    <td>滚动 (垂直)</td>
+                    <td>Ctrl + Scrolling</td>
+                </tr>
+                <tr>
+                    <td>滚动 (水平)</td>
+                    <td>Ctrl + ⇧ + Scrolling</td>
+                </tr>
+                <tr>
+                    <td>直接编辑</td>
+                    <td>E</td>
+                </tr>
+                <tr>
+                    <td>拖动工具</td>
+                    <td>H</td>
+                </tr>
+                <tr>
+                    <td>多选工具</td>
+                    <td>L</td>
+                </tr>
+                <!-- <tr>
+                    <td>Space Tool</td>
+                    <td>S</td>
+                </tr> -->
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="bpmn-downloads">
     <a #downloadDiagram href="javascript:" title="download BPMN diagram">
-        download BPMN diagram
+        <span class="app-icon-download"></span>
     </a>
 
     <a #downloadSVG href="javascript:" title="download as SVG image">
-        download SVG image
+        <span class="app-icon-picture"></span>
+    </a>
+
+    <a href="javascript:" (click)="toggleHideKeyboardShortcuts();">
+        <span class="app-icon-keyboard"></span>
     </a>
 </div>
