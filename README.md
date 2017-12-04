@@ -1,13 +1,13 @@
-# ng5
-This is a quick start creating an angular 5 application with webpack.
+# ng bpmn demo
+ng bpmn demo.
 
 ### Quick start
 ```bash
 # Clone my repo
-git clone https://github.com/muweigg/ng5.git
+git clone https://github.com/muweigg/ng-bpmn.git
 
-# Change directory to ng5
-cd ng5
+# Change directory to ng-bpmn
+cd ng-bpmn
 
 # Install dependencies
 npm install
