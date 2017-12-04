@@ -2,10 +2,10 @@ import { Component, OnInit, ElementRef, ViewChild, ViewEncapsulation, Input, Sim
 import { HttpClient } from '@angular/common/http';
 import { BpmnService } from './service/bpmn.service';
 
-import debounce from 'lodash/function/debounce';
-
-const tmlOptions = require('./resource/options.json');
 import newDiagramXML from './resource/new-diagram.bpmn';
+const tmlOptions = require('./resource/tml-options.json');
+
+import debounce from 'lodash/function/debounce';
 
 @Component({
     selector: 'bpmn',
@@ -43,11 +43,14 @@ export class BpmnComponent implements OnInit {
     ngAfterViewInit () {
         let minimapModule = this.bpmnService.getMinimapModule();
         let translateModule = this.bpmnService.getTranslateModule();
+        let paletteProviderModule = this.bpmnService.getPaletteProviderModule();
         let options = {
             container: '#bpmn-canvas',
+            keyboard: { bindTo: document },
             additionalModules: [
                 minimapModule,
-                translateModule
+                translateModule,
+                paletteProviderModule
             ],
             moddleExtensions: {
               tml: tmlOptions
