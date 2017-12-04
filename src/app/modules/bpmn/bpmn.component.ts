@@ -63,9 +63,7 @@ export class BpmnComponent implements OnInit {
 
         this.viewer.importXML(newDiagramXML, err => {
             if (err) return console.log('error rendering', err);
-            let canvas = this.viewer.get('canvas');
-            // zoom to fit full viewport
-            canvas.zoom('fit-viewport');
+            this.resetZoom()
         });
         
         this.viewer.on('commandStack.changed', this.exportArtifacts());
@@ -223,18 +221,14 @@ export class BpmnComponent implements OnInit {
     newDiagram () {
         this.viewer.importXML(newDiagramXML, err => {
             if (err) return console.log('error rendering', err);
-            let canvas = this.viewer.get('canvas');
-            // zoom to fit full viewport
-            canvas.zoom('fit-viewport');
+            this.resetZoom()
         });
     }
 
     loadXML (xml) {
         this.viewer.importXML(xml, err => {
             if (err) return console.log('error rendering', err);
-            let canvas = this.viewer.get('canvas');
-            // zoom to fit full viewport
-            canvas.zoom('fit-viewport');
+            this.resetZoom()
         });
     }
 
