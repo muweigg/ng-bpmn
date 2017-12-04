@@ -138,7 +138,6 @@ export class BpmnComponent implements OnInit {
             let xmlDom = this.parser.parseFromString(xml, 'application/xml');
             json = this.buildJSON(this.preprocess(xmlDom.children[0].children));
         });
-        console.log(this.bpmnNodeIndex);
         return json;
     }
 
