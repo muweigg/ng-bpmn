@@ -30,7 +30,6 @@
     "@ngrx/core": "^1.2.0",
     "@ngrx/store": "^4.1.1",
     "bpmn-js": "^0.25.1",
-    "bpmn-js-properties-panel": "^0.18.4",
     "bpmn-js-token-simulation": "^0.6.0",
     "core-js": "^2.5.1",
     "diagram-js": "^0.22.4",

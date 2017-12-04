@@ -822,17 +822,6 @@ boom@5.x.x:
   dependencies:
     hoek "4.x.x"
 
-bpmn-js-properties-panel@^0.18.4:
-  version "0.18.5"
-  resolved "https://registry.yarnpkg.com/bpmn-js-properties-panel/-/bpmn-js-properties-panel-0.18.5.tgz#7a0d68de78d68c932f22590646592a1d7f9ded21"
-  dependencies:
-    ids "^0.2.0"
-    inherits "^2.0.1"
-    lodash "^3.0.1"
-    min-dom "^0.2.0"
-    scroll-tabs "^0.2.1"
-    selection-update "^0.1.2"
-
 bpmn-js-token-simulation@^0.6.0:
   version "0.6.0"
   resolved "https://registry.yarnpkg.com/bpmn-js-token-simulation/-/bpmn-js-token-simulation-0.6.0.tgz#65c12f9bf3dbccd0d0f83e5ad3a01b8afa02cee9"
@@ -2171,7 +2160,7 @@ eventemitter3@1.x.x:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/eventemitter3/-/eventemitter3-1.2.0.tgz#1c86991d816ad1e504750e73874224ecf3bec508"
 
-events@^1.0.0, events@^1.1.0:
+events@^1.0.0:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/events/-/events-1.1.1.tgz#9ebdb7635ad099c70dcc4c2a1f5004288e8bd924"
 
@@ -3584,7 +3573,7 @@ lodash.uniq@^4.5.0:
   version "4.5.0"
   resolved "https://registry.yarnpkg.com/lodash.uniq/-/lodash.uniq-4.5.0.tgz#d0225373aeb652adc1bc82e4945339a842754773"
 
-lodash@^3.0.0, lodash@^3.0.1, lodash@^3.10.1:
+lodash@^3.0.0, lodash@^3.0.1:
   version "3.10.1"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-3.10.1.tgz#5bf45e8e49ba4189e17d482789dfd15bd140b7b6"
 
@@ -5299,15 +5288,6 @@ script-loader@^0.7.2:
   dependencies:
     raw-loader "~0.5.1"
 
-scroll-tabs@^0.2.1:
-  version "0.2.1"
-  resolved "https://registry.yarnpkg.com/scroll-tabs/-/scroll-tabs-0.2.1.tgz#770d462b40f633b9cae6eee3521f785c49da8f6f"
-  dependencies:
-    events "^1.1.0"
-    inherits "^2.0.1"
-    lodash "^3.10.1"
-    min-dom "^0.2.0"
-
 scss-tokenizer@^0.2.3:
   version "0.2.3"
   resolved "https://registry.yarnpkg.com/scss-tokenizer/-/scss-tokenizer-0.2.3.tgz#8eb06db9a9723333824d3f5530641149847ce5d1"
@@ -5318,10 +5298,6 @@ scss-tokenizer@^0.2.3:
 select-hose@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/select-hose/-/select-hose-2.0.0.tgz#625d8658f865af43ec962bfc376a37359a4994ca"
-
-selection-update@^0.1.2:
-  version "0.1.2"
-  resolved "https://registry.yarnpkg.com/selection-update/-/selection-update-0.1.2.tgz#803a044dcc6edab5a3ae648f5f0357e89ad66b96"
 
 selfsigned@^1.9.1:
   version "1.10.1"
