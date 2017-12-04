@@ -17,7 +17,7 @@ export const appRoutingComponents = [
 export var routes: Routes = [
     { path: '', redirectTo: 'modeler', pathMatch: 'full' },
     { path: 'viewer', component: PageViewerComponent },
-    { path: 'navigated', component: PageNavigatedViewerComponent },
+    { path: 'navigated-viewer', component: PageNavigatedViewerComponent },
     { path: 'modeler', component: PageModelerComponent },
     { path: 'doc', component: DocComponent },
     { path: '**', component: PageNotFoundComponent },
