@@ -238,6 +238,11 @@ export class BpmnComponent implements OnInit {
         });
     }
 
+    resetZoom () {
+        let canvas = this.viewer.get('canvas');
+        canvas.zoom('fit-viewport');
+    }
+
     toggleHideKeyboardShortcuts () {
         this.hideKeyboardShortcuts = !this.hideKeyboardShortcuts;
     }

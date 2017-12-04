@@ -71,6 +71,10 @@
                 }
             }
         }
+
+        .bjs-powered-by {
+            display: none !important;
+        }
     }
 
     #bpmn-canvas {
@@ -128,7 +132,8 @@
             display: inline-block;
             margin-right: 5px;
             padding: 2px 5px;
-            font-size: 24px;
+            font-size: 22px;
+            line-height: 26px;
             color: #ddd;
             text-decoration: none;
             text-align: center;
@@ -138,12 +143,27 @@
             &.active {
                 color: #555;
             }
+        }
+    }
 
-            &:nth-last-of-type(1) {
-                font-size: 28px;
-                color: #555;
-                vertical-align: middle;
-            }
+    .bpmn-auxiliary-tools {
+        position: absolute;
+        right: 10px;
+        bottom: 10px;
+
+        button {
+            font-size: 22px;
+            line-height: 26px;
+            text-align: center;
+            background: none;
+            border: 0;
+            padding: 0;
+            outline: none;
+            cursor: pointer;
+            background-color: #fff;
+            border-radius: 3px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.3);
+            padding: 5px;
         }
     }
 }

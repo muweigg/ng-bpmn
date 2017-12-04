@@ -56,8 +56,13 @@
     <a #downloadSVG href="javascript:" title="download as SVG image">
         <span class="app-icon-picture"></span>
     </a>
+</div>
 
-    <a href="javascript:" (click)="toggleHideKeyboardShortcuts();" [hidden]="!modeler">
+<div class="bpmn-auxiliary-tools">
+    <button (click)="resetZoom();">
+        <span class="app-icon-size-reset"></span>
+    </button>
+    <button (click)="toggleHideKeyboardShortcuts();" [hidden]="!modeler">
         <span class="app-icon-keyboard"></span>
-    </a>
+    </button>
 </div>
