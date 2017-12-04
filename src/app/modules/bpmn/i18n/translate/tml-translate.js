@@ -1,6 +1,6 @@
 let translations = require('./zh_CN');
 
-const keyValueMap = {
+const typeMap = {
     'StartEvent': '开始',
     'EndEvent': '结束',
     'ExclusiveGateway': '排他网关',
@@ -16,6 +16,6 @@ module.exports = function customTranslate(template, replacements) {
 
     // Replace
     return template.replace(/{([^}]+)}/g, function(_, key) {
-        return keyValueMap[replacements[key]] || '{' + key + '}';
+        return typeMap[replacements[key]] || '{' + key + '}';
     });
 };
