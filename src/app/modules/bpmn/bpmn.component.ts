@@ -59,11 +59,11 @@ export class BpmnComponent implements OnInit {
         
         this.viewer = this.modeler
             ? this.bpmnService.getModelerInstance(options)
-            : this.bpmnService.getViewerInstance(options);
+            : this.bpmnService.getNavigatedViewerInstance(options);
 
         this.viewer.importXML(newDiagramXML, err => {
             if (err) return console.log('error rendering', err);
-            this.resetZoom()
+            this.resetZoom();
         });
         
         this.viewer.on('commandStack.changed', this.exportArtifacts());
@@ -235,14 +235,15 @@ export class BpmnComponent implements OnInit {
     newDiagram () {
         this.viewer.importXML(newDiagramXML, err => {
             if (err) return console.log('error rendering', err);
-            this.resetZoom()
+            this.resetZoom();
         });
     }
 
     loadXML (xml) {
         this.viewer.importXML(xml, err => {
             if (err) return console.log('error rendering', err);
-            this.resetZoom()
+            this.resetZoom();
+            if (!this.modeler) this.exportArtifacts()();
         });
     }
 
