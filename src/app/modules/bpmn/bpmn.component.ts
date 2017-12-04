@@ -15,6 +15,7 @@ import debounce from 'lodash/function/debounce';
 export class BpmnComponent implements OnInit {
 
     @Input() modeler: boolean = false;
+    @Input() navigated: boolean = false;
     @Output() onClick: EventEmitter<any> = new EventEmitter<any>();
     @ViewChild('downloadDiagram') downloadDiagram: ElementRef;
     @ViewChild('downloadSVG') downloadSVG: ElementRef;
@@ -23,7 +24,7 @@ export class BpmnComponent implements OnInit {
     
     parser: DOMParser = new DOMParser();
     viewer: any;
-    bpmnNodeIndex: any = {};    
+    bpmnNodeIndex: any = {};
 
     constructor(
         private http: HttpClient,
@@ -38,6 +39,7 @@ export class BpmnComponent implements OnInit {
 
     ngOnChanges(changes: SimpleChanges) {
         if (changes.modeler) this.setDefault(changes, 'modeler');
+        if (changes.navigated) this.setDefault(changes, 'navigated');
     }
 
     ngAfterViewInit () {
@@ -59,7 +61,7 @@ export class BpmnComponent implements OnInit {
         
         this.viewer = this.modeler
             ? this.bpmnService.getModelerInstance(options)
-            : this.bpmnService.getNavigatedViewerInstance(options);
+            : this.navigated ? this.bpmnService.getNavigatedViewerInstance(options) : this.bpmnService.getViewerInstance(options);
 
         this.viewer.importXML(newDiagramXML, err => {
             if (err) return console.log('error rendering', err);

@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 
-const BpmnViewer = require('bpmn-js');
+const BpmnViewer = require('bpmn-js/lib/Viewer');
 const BpmnModeler = require('bpmn-js/lib/Modeler');
 const BpmnNavigatedViewer = require('bpmn-js/lib/NavigatedViewer');
 const MinimapModule = require('diagram-js-minimap');

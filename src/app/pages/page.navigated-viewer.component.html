@@ -1,0 +1,19 @@
+<div class="box">
+    
+    <button (click)="exportXML();">
+        Export XML
+    </button>
+    
+    <button (click)="exportJSON();">
+        Export JSON
+    </button>
+
+    id: {{ businessObject?.id }}
+    name: {{ businessObject?.name }}
+    
+    <div class="container">
+        <bpmn #bpmnViewer navigated
+            (onClick)="openPanel($event);"></bpmn>
+    </div>
+
+</div>
