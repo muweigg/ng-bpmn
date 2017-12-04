@@ -11,7 +11,6 @@ import debounce from 'lodash/function/debounce';
     selector: 'bpmn',
     templateUrl: './bpmn.component.html',
     styleUrls: ['./bpmn.component.scss'],
-    // encapsulation: ViewEncapsulation.None
 })
 export class BpmnComponent implements OnInit {
 

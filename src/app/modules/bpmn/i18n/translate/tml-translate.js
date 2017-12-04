@@ -1,4 +1,4 @@
-let translations = require('./zh_cn');
+let translations = require('./zh_CN');
 
 module.exports = function customTranslate(template, replacements) {
     replacements = replacements || {};
