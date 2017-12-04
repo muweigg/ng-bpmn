@@ -16,8 +16,10 @@
         Export JSON
     </button>
 
-    id: {{ this.businessObject?.id }}
-    name: {{ this.businessObject?.name }}
+    id: {{ businessObject?.id }}
+    name: {{ businessObject?.name }}
+    options: <input *ngIf="businessObject" type="text" name="options"
+        [(ngModel)]="businessObject.options">
     
     <div class="container">
         <bpmn #bpmnModeler modeler
