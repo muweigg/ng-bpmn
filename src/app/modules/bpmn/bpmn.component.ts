@@ -138,6 +138,7 @@ export class BpmnComponent implements OnInit {
             let xmlDom = this.parser.parseFromString(xml, 'application/xml');
             json = this.buildJSON(this.preprocess(xmlDom.children[0].children));
         });
+        console.log(this.bpmnNodeIndex);
         return json;
     }
 
@@ -176,6 +177,16 @@ export class BpmnComponent implements OnInit {
                     if (incoming.length > 0) bsO['incoming'] = incoming;
                     if (outgoing.length > 0) bsO['outgoing'] = outgoing;
                 }
+
+                if (node.attributes.length > 1) {
+                    let attributes = Array.prototype.slice.call(node.attributes);
+                    let attribute = attributes.filter(attr => attr.nodeName === 'tml:options')[0];
+                    if (attribute) {
+                        try { bsO['options'] = JSON.parse(attribute.nodeValue); }
+                        catch (e) { bsO['options'] = attribute.nodeValue; }
+                    }
+                }
+
                 index[node.id] = bsO;
             }
         }
