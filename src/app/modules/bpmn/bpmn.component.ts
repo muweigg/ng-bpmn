@@ -87,8 +87,19 @@ export class BpmnComponent implements OnInit {
             if (err) return console.log('error rendering', err);
             this.resetZoom();
         });
+
+        let exportArtifacts = debounce(() => {
+            if (!this.viewer) return;
+            this.saveSVG((err, svg) => {
+                this.setEncoded(this.downloadSVG.nativeElement, 'diagram.svg', err ? null : svg);
+            });
+            this.saveDiagram((err, xml) => {
+                this.setEncoded(this.downloadDiagram.nativeElement, 'diagram.bpmn', err ? null : xml);
+                this.xml = xml;
+            });
+        }, 500);
         
-        this.viewer.on('commandStack.changed', this.exportArtifacts());
+        this.viewer.on('commandStack.changed', exportArtifacts);
         
         this.viewer.on('element.click', event => {
             var element = event.element,
@@ -113,18 +124,6 @@ export class BpmnComponent implements OnInit {
         return element.extensionElements.values.filter(function(e) {
             return e.$instanceOf(type);
         })[0];
-    }
-
-    exportArtifacts () {
-        return debounce(() => {
-            if (!this.viewer) return;
-            this.saveSVG((err, svg) => {
-                this.setEncoded(this.downloadSVG.nativeElement, 'diagram.svg', err ? null : svg);
-            });
-            this.saveDiagram((err, xml) => {
-                this.setEncoded(this.downloadDiagram.nativeElement, 'diagram.bpmn', err ? null : xml);
-            });
-        }, 500);
     }
 
     setEncoded (link, name, data) {
