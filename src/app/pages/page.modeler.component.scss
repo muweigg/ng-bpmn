@@ -1,13 +1,18 @@
-div {
-    padding: 10px 20px;
-    line-height: 1.8;
-}
+:host {
 
-.container {
-    position: absolute;
-    top: 100px;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    outline: 2px solid orange;
+    > div {
+
+        button {
+            margin: 10px 5px 0 0;
+        }
+    }
+
+    .container {
+        position: absolute;
+        top: 100px;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        outline: 2px solid orange;
+    }
 }
