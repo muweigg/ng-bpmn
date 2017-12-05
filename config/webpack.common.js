@@ -62,7 +62,7 @@ module.exports = function(options) {
                         options: {
                             limit: 10240,
                             name: '[path][name].[hash].[ext]',
-                            outputPath: url => url.replace(/src|node_modules/, '.')
+                            outputPath: url => url.replace(/^src/, '.')
                         }
                     }]
                 },
@@ -72,7 +72,7 @@ module.exports = function(options) {
                         loader: 'file-loader',
                         options: {
                             name: '[path][name].[hash].[ext]',
-                            outputPath: url => url.replace(/src|node_modules/, '.')
+                            outputPath: url => url.replace(/^src/, '.')
                         }
                     }]
                 },
