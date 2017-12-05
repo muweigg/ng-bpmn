@@ -13,6 +13,10 @@ export class PageModelerComponent implements OnInit {
 
     @ViewChild('bpmnModeler') bpmnModeler: BpmnComponent;
 
+    modeler: boolean = false;
+    navigated: boolean = false;
+    tokenSimulation: boolean = false;
+
     businessObject: any;
 
     constructor() { }
@@ -35,7 +39,23 @@ export class PageModelerComponent implements OnInit {
         console.log(this.bpmnModeler.exportJSON());
     }
     
+    destroy () {
+        this.bpmnModeler.destroy();
+    }
+    
     openPanel (businessObject) {
         this.businessObject = businessObject;
+    }
+
+    toggleModeler () {
+        this.modeler = !this.modeler;
+    }
+
+    toggleNavigated () {
+        this.navigated = !this.navigated;
+    }
+    
+    toggleTokenSimulation () {
+        this.tokenSimulation = !this.tokenSimulation;
     }
 }

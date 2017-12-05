@@ -1,4 +1,6 @@
 import { Injectable } from "@angular/core";
+import mergeWith from 'lodash/mergeWith';
+import isArray from 'lodash/isArray';
 
 const BpmnViewer = require('bpmn-js/lib/Viewer');
 const BpmnModeler = require('bpmn-js/lib/Modeler');
@@ -11,42 +13,48 @@ const PaletteProviderModule = {
     paletteProvider: [ 'type', require('../palette/tml-palette-provider') ]
 };
 const TokenSimulationModule = require('bpmn-js-token-simulation/lib/viewer');
-const ReplaceMenuProviderModule = {};
+
+const tmlOptions = require('../resource/tml-options.json');
 
 @Injectable()
 export class BpmnService {
 
+    default: any = {
+        additionalModules: [
+            MinimapModule,
+            TranslateModule,
+        ],
+        moddleExtensions: {
+            tml: tmlOptions
+        }
+    };
+
     constructor () {}
 
-    getViewerInstance (options) {
+    customizerMerge (objValue, srcValue) {
+        if (isArray(objValue))
+            return objValue.concat(srcValue);
+    }
+
+    getViewerInstance (options: any, tokenSimulation: boolean = false) {
+        options = mergeWith({}, this.default, options, this.customizerMerge);
+        if (tokenSimulation) options.additionalModules.push(TokenSimulationModule);
         return new BpmnViewer(options);
     }
     
-    getModelerInstance (options) {
-        return new BpmnModeler(options);
-    }
-    
-    getNavigatedViewerInstance (options) {
+    getNavigatedViewerInstance (options: any, tokenSimulation: boolean = false) {
+        options = mergeWith({}, this.default, options, this.customizerMerge);
+        if (tokenSimulation) options.additionalModules.push(TokenSimulationModule);
         return new BpmnNavigatedViewer(options);
     }
-
-    getTokenSimulationModule () {
-        return TokenSimulationModule;
-    }
-
-    getMinimapModule () {
-        return MinimapModule;
-    }
-
-    getTranslateModule () {
-        return TranslateModule;
-    }
     
+    getModelerInstance (options: any, tokenSimulation: boolean = false) {
+        options = mergeWith({}, this.default, options, this.customizerMerge);
+        if (tokenSimulation) options.additionalModules.push(TokenSimulationModule);
+        return new BpmnModeler(options);
+    }
+
     getPaletteProviderModule () {
         return PaletteProviderModule;
-    }
-    
-    getReplaceMenuProviderModule () {
-        return ReplaceMenuProviderModule;
     }
 }

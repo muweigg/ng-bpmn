@@ -2,10 +2,11 @@ import { Component, OnInit, ElementRef, ViewChild, ViewEncapsulation, Input, Sim
 import { HttpClient } from '@angular/common/http';
 import { BpmnService } from './service/bpmn.service';
 
-import newDiagramXML from './resource/new-diagram.bpmn';
-const tmlOptions = require('./resource/tml-options.json');
-
 import debounce from 'lodash/debounce';
+import mergeWith from 'lodash/mergeWith';
+import isArray from 'lodash/isArray';
+
+import newDiagramXML from './resource/new-diagram.bpmn';
 
 @Component({
     selector: 'bpmn',
@@ -14,8 +15,11 @@ import debounce from 'lodash/debounce';
 })
 export class BpmnComponent implements OnInit {
 
+    // 当前已加载 XML
+    xml: string = '';
     @Input() modeler: boolean = false;
     @Input() navigated: boolean = false;
+    @Input() tokenSimulation: boolean = false;
     @Output() onClick: EventEmitter<any> = new EventEmitter<any>();
     @ViewChild('downloadDiagram') downloadDiagram: ElementRef;
     @ViewChild('downloadSVG') downloadSVG: ElementRef;
@@ -34,38 +38,52 @@ export class BpmnComponent implements OnInit {
     ngOnInit () { }
 
     ngOnDestroy () {
-        // this.viewer.destroy();
-    }
-
-    ngOnChanges(changes: SimpleChanges) {
-        if (changes.modeler) this.setDefault(changes, 'modeler');
-        if (changes.navigated) this.setDefault(changes, 'navigated');
+        this.destroy();
+        this.xml = '';
     }
 
     ngAfterViewInit () {
-        let minimapModule = this.bpmnService.getMinimapModule();
-        let translateModule = this.bpmnService.getTranslateModule();
+        this.createViewer();
+    }
+    
+    ngOnChanges(changes: SimpleChanges) {
+        if (changes.modeler) {
+            this.setDefault(changes, 'modeler');
+            this.createViewer();
+        }
+        if (changes.navigated) {
+            this.setDefault(changes, 'navigated');
+            this.createViewer();
+        }
+        if (changes.tokenSimulation) {
+            this.setDefault(changes, 'tokenSimulation');
+            this.createViewer();
+        }
+    }
+    
+    customizerMerge (objValue, srcValue) {
+        if (isArray(objValue))
+            return objValue.concat(srcValue);
+    }
+
+    createViewer () {
+        let xml: string = this.xml === '' ? newDiagramXML: this.xml;
         let paletteProviderModule = this.bpmnService.getPaletteProviderModule();
-        let tokenSimulationModule = this.bpmnService.getTokenSimulationModule();
-        let options = {
+        let options: any = {
             container: '#bpmn-canvas',
             keyboard: { bindTo: document },
             additionalModules: [
-                minimapModule,
-                translateModule,
                 paletteProviderModule,
-                tokenSimulationModule,
-            ],
-            moddleExtensions: {
-              tml: tmlOptions
-            }
-        };
+            ]
+        }
+
+        if (this.viewer) this.destroy();
         
         this.viewer = this.modeler
-            ? this.bpmnService.getModelerInstance(options)
-            : this.navigated ? this.bpmnService.getNavigatedViewerInstance(options) : this.bpmnService.getViewerInstance(options);
+            ? this.bpmnService.getModelerInstance(options, this.tokenSimulation)
+            : this.navigated ? this.bpmnService.getNavigatedViewerInstance(options, this.tokenSimulation) : this.bpmnService.getViewerInstance(options, this.tokenSimulation);
 
-        this.viewer.importXML(newDiagramXML, err => {
+        this.viewer.importXML(xml, err => {
             if (err) return console.log('error rendering', err);
             this.resetZoom();
         });
@@ -80,7 +98,7 @@ export class BpmnComponent implements OnInit {
             this.onClick.emit(businessObject);
         });
     }
-    
+
     setDefault (changes, name: any, defaultVal: any = true, type: any = 'boolean') {
         this[name] = typeof changes[name].currentValue === type
             ? changes[name].currentValue
@@ -99,6 +117,7 @@ export class BpmnComponent implements OnInit {
 
     exportArtifacts () {
         return debounce(() => {
+            if (!this.viewer) return;
             this.saveSVG((err, svg) => {
                 this.setEncoded(this.downloadSVG.nativeElement, 'diagram.svg', err ? null : svg);
             });
@@ -245,6 +264,7 @@ export class BpmnComponent implements OnInit {
 
     loadXML (xml) {
         this.viewer.importXML(xml, err => {
+            this.xml = xml;
             if (err) return console.log('error rendering', err);
             this.resetZoom();
             if (!this.modeler) this.exportArtifacts()();
@@ -252,11 +272,19 @@ export class BpmnComponent implements OnInit {
     }
 
     resetZoom () {
+        if (!this.viewer) return;
         let canvas = this.viewer.get('canvas');
         canvas.zoom('fit-viewport');
     }
 
     toggleHideKeyboardShortcuts () {
         this.hideKeyboardShortcuts = !this.hideKeyboardShortcuts;
+    }
+
+    destroy () {
+        if (this.viewer) {
+            this.viewer.destroy();
+            this.viewer = null;
+        }
     }
 }

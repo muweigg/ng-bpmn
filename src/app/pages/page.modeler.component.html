@@ -1,5 +1,19 @@
 <div class="box">
     
+    <button (click)="toggleNavigated();" [disabled]="modeler">
+        Toggle Navigated {{ navigated }}
+    </button>
+
+    <button (click)="toggleModeler();">
+        Toggle Modeler {{ modeler }}
+    </button>
+    
+    <button (click)="toggleTokenSimulation();">
+        Toggle Token Simulation {{ tokenSimulation }}
+    </button>
+
+    <br>
+    
     <button (click)="loadTestXML();">
         load Test XML BPMN diagram
     </button>
@@ -16,13 +30,18 @@
         Export JSON
     </button>
 
+    &nbsp;&nbsp;
+
     id: {{ businessObject?.id }}
     name: {{ businessObject?.name }}
     options: <input *ngIf="businessObject" type="text" name="options"
         [(ngModel)]="businessObject.options">
     
     <div class="container">
-        <bpmn #bpmnModeler modeler
+        <bpmn #bpmnModeler
+            [modeler]="modeler"
+            [navigated]="navigated"
+            [tokenSimulation]="tokenSimulation"
             (onClick)="openPanel($event);"></bpmn>
     </div>
 
