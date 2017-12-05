@@ -47,17 +47,14 @@ export class BpmnComponent implements OnInit {
     }
     
     ngOnChanges(changes: SimpleChanges) {
-        if (changes.modeler) {
-            this.setDefault(changes, 'modeler');
-            this.createViewer();
-        }
-        if (changes.navigated) {
-            this.setDefault(changes, 'navigated');
-            this.createViewer();
-        }
-        if (changes.tokenSimulation) {
-            this.setDefault(changes, 'tokenSimulation');
-            this.createViewer();
+        if (changes.modeler) this.setDefault(changes, 'modeler');
+        if (changes.navigated) this.setDefault(changes, 'navigated');
+        if (changes.tokenSimulation) this.setDefault(changes, 'tokenSimulation');
+        if (changes.modeler || changes.navigated || changes.tokenSimulation) {
+            if (this.viewer) {
+                this.destroy();
+                this.createViewer();
+            }
         }
     }
     
@@ -76,8 +73,6 @@ export class BpmnComponent implements OnInit {
                 paletteProviderModule,
             ]
         }
-
-        if (this.viewer) this.destroy();
         
         this.viewer = this.modeler
             ? this.bpmnService.getModelerInstance(options, this.tokenSimulation)
@@ -88,7 +83,19 @@ export class BpmnComponent implements OnInit {
             this.resetZoom();
         });
 
-        let exportArtifacts = debounce(() => {
+        this.viewer.on('commandStack.changed', this.exportArtifacts());
+        
+        this.viewer.on('element.click', event => {
+            var element = event.element,
+                moddle = this.viewer.get('moddle'),
+                businessObject = element.businessObject;
+            if (!element.parent) return;
+            this.onClick.emit(businessObject);
+        });
+    }
+
+    exportArtifacts () {
+        return debounce(() => {
             if (!this.viewer) return;
             this.saveSVG((err, svg) => {
                 this.setEncoded(this.downloadSVG.nativeElement, 'diagram.svg', err ? null : svg);
@@ -98,16 +105,6 @@ export class BpmnComponent implements OnInit {
                 this.xml = xml;
             });
         }, 500);
-        
-        this.viewer.on('commandStack.changed', exportArtifacts);
-        
-        this.viewer.on('element.click', event => {
-            var element = event.element,
-                moddle = this.viewer.get('moddle'),
-                businessObject = element.businessObject;
-            if (!element.parent) return;
-            this.onClick.emit(businessObject);
-        });
     }
 
     setDefault (changes, name: any, defaultVal: any = true, type: any = 'boolean') {
@@ -262,10 +259,11 @@ export class BpmnComponent implements OnInit {
     }
 
     loadXML (xml) {
+        if (!this.viewer) return;
         this.viewer.importXML(xml, err => {
-            this.xml = xml;
             if (err) return console.log('error rendering', err);
             this.resetZoom();
+            this.xml = xml;
             if (!this.modeler) this.exportArtifacts()();
         });
     }
