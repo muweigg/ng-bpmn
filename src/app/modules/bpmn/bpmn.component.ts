@@ -3,8 +3,6 @@ import { HttpClient } from '@angular/common/http';
 import { BpmnService } from './service/bpmn.service';
 
 import debounce from 'lodash/debounce';
-import mergeWith from 'lodash/mergeWith';
-import isArray from 'lodash/isArray';
 
 import newDiagramXML from './resource/new-diagram.bpmn';
 
@@ -58,11 +56,6 @@ export class BpmnComponent implements OnInit {
         }
     }
     
-    customizerMerge (objValue, srcValue) {
-        if (isArray(objValue))
-            return objValue.concat(srcValue);
-    }
-
     createViewer () {
         let xml: string = this.xml === '' ? newDiagramXML: this.xml;
         let paletteProviderModule = this.bpmnService.getPaletteProviderModule();
