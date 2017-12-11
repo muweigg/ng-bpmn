@@ -153,7 +153,7 @@ export class BpmnComponent implements OnInit {
         // console.log(this.bpmnNodeIndex);
         return json;
     }
-
+/* 
     preprocess (nodeList: NodeList, index: any = {}) {
         let list = Array.prototype.slice.call(nodeList);
         for (let node of list) {
@@ -243,7 +243,79 @@ export class BpmnComponent implements OnInit {
 
         return { startEvent };
     }
+ */
 
+    preprocess (nodeList: NodeList, processId: string = '', index: any = {}) {
+        let catgoryIdx = {
+            'bpmn:startEvent': 0,
+            'bpmn:endEvent': 10,
+            'bpmn:exclusiveGateway': 1,
+            'bpmn:parallelGateway': 1,
+            'bpmn:task': 2,
+            'bpmn:subProcess': 3
+        };
+        let list = Array.prototype.slice.call(nodeList);
+        for (let node of list) {
+            if (node.nodeName === 'bpmn:process'
+                || node.nodeName === 'bpmn:subProcess') this.preprocess(node.children, node.id, index);
+
+            if (node.nodeName !== 'bpmndi:BPMNDiagram' && node.nodeName !== 'bpmn:process') {
+
+                this.bpmnNodeIndex[node.id] = node;
+                    
+                let bsO = {};
+                bsO['prcsid'] = node.id;
+                bsO['processname'] = '';
+                bsO['type'] = node.nodeName;
+                bsO['group'] = processId;
+                bsO['catgory'] = catgoryIdx[node.nodeName];
+                bsO['is_begin'] = node.nodeName === 'bpmn:startEvent';
+                bsO['is_end'] = node.nodeName === 'bpmn:endEvent';
+                
+                if (node.nodeName === 'bpmn:startEvent' && node.parentElement.nodeName === 'bpmn:process') bsO['root'] = true;
+
+                if (node.children.length > 0) {
+                    let children = Array.prototype.slice.call(node.children);
+
+                    let incoming = children.filter(child => {
+                        if (child.nodeName === 'bpmn:incoming') return child.innerHTML;
+                    }).map(incoming => incoming.innerHTML);
+
+                    let outgoing = children.filter(child => {
+                        if (child.nodeName === 'bpmn:outgoing') return child;
+                    }).map(outgoing => outgoing.innerHTML);
+
+                    if (incoming.length > 0) bsO['processup'] = incoming;
+                    if (outgoing.length > 0) bsO['processto'] = outgoing;
+                }
+
+                if (node.attributes.length > 1) {
+                    let attributes = Array.prototype.slice.call(node.attributes);
+                    let options = attributes.filter(attr => attr.nodeName === 'tml:options')[0];
+                    if (options) {
+                        try { bsO['options'] = JSON.parse(options.nodeValue); }
+                        catch (e) { bsO['options'] = options.nodeValue; }
+                    }
+                    let name = attributes.filter(attr => attr.nodeName === 'name')[0];
+                    if (name) bsO['processname'] = name.nodeValue;
+                }
+
+                index[node.id] = bsO;
+            }
+        }
+        return index;
+    }
+
+    buildJSON (index: any = {}) {
+        let nodes = [];
+
+        for (let key of Object.keys(index)) {
+            if (!/^SequenceFlow.*/i.test(key))
+                nodes.push(index[key]);
+        }
+
+        return nodes.filter(node => node.prcsid !== '');
+    }
     newDiagram () {
         this.viewer.importXML(newDiagramXML, err => {
             if (err) return console.log('error rendering', err);
