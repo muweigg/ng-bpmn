@@ -314,6 +314,31 @@ export class BpmnComponent implements OnInit {
                 nodes.push(index[key]);
         }
 
+        for (let i in nodes) {
+            
+            let bsO = nodes[i];
+
+            if (bsO.processup && bsO.processup.length > 0) {
+                bsO.processup = bsO.processup.map(id => {
+                    let node = this._bpmnNodeIndex[id];
+                    for (let attr of node.attributes) {
+                        if (attr.name === 'sourceRef')
+                            return index[attr.nodeValue].prcsid;
+                    }
+                });
+            }
+            
+            if (bsO.processto && bsO.processto.length > 0) {
+                bsO.processto = bsO.processto.map(id => {
+                    let node = this._bpmnNodeIndex[id];
+                    for (let attr of node.attributes) {
+                        if (attr.name === 'targetRef')
+                            return index[attr.nodeValue].prcsid;
+                    }
+                });
+            }
+        }
+
         return nodes.filter(node => node.prcsid !== '');
     }
     newDiagram () {
