@@ -1,7 +1,6 @@
 'use strict';
 
 import { onSettings } from '../bpmn.component';
-// const onSettings = require('../on-settings');
 
 const assign = require('lodash/assign'),
     is = require('bpmn-js/lib/util/ModelUtil').is;

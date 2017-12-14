@@ -9,7 +9,6 @@ const TokenSimulationModule = require('bpmn-js-token-simulation/lib/viewer');
 const MinimapModule = require('diagram-js-minimap');
 const TranslateModule = require('../i18n/translate/tml-translate');
 const PaletteProviderModule = require('../palette/tml-palette-provider');
-// const TMLContextPadProviderModule = require('../context-pad/tml-context-pad-provider');
 import TMLContextPadProviderModule from '../context-pad/tml-context-pad-provider';
 
 const tmlOptions = require('../resource/tml-options.json');
