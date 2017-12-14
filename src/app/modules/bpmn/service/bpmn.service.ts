@@ -5,14 +5,12 @@ import isArray from 'lodash/isArray';
 const BpmnViewer = require('bpmn-js/lib/Viewer');
 const BpmnModeler = require('bpmn-js/lib/Modeler');
 const BpmnNavigatedViewer = require('bpmn-js/lib/NavigatedViewer');
-const MinimapModule = require('diagram-js-minimap');
-const TranslateModule = {
-    translate: [ 'value', require('../i18n/translate/tml-translate') ]
-};
-const PaletteProviderModule = {
-    paletteProvider: [ 'type', require('../palette/tml-palette-provider') ]
-};
 const TokenSimulationModule = require('bpmn-js-token-simulation/lib/viewer');
+const MinimapModule = require('diagram-js-minimap');
+const TranslateModule = require('../i18n/translate/tml-translate');
+const PaletteProviderModule = require('../palette/tml-palette-provider');
+// const TMLContextPadProviderModule = require('../context-pad/tml-context-pad-provider');
+import TMLContextPadProviderModule from '../context-pad/tml-context-pad-provider';
 
 const tmlOptions = require('../resource/tml-options.json');
 
@@ -21,6 +19,7 @@ export class BpmnService {
 
     default: any = {
         additionalModules: [
+            PaletteProviderModule,
             MinimapModule,
             TranslateModule,
         ],
@@ -49,7 +48,7 @@ export class BpmnService {
     }
     
     getModelerInstance (options: any, tokenSimulation: boolean = false) {
-        options = mergeWith({}, this.default, options, this.customizerMerge);
+        options = mergeWith({additionalModules: [TMLContextPadProviderModule]}, this.default, options, this.customizerMerge);
         if (tokenSimulation) options.additionalModules.push(TokenSimulationModule);
         return new BpmnModeler(options);
     }

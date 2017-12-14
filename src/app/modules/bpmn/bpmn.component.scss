@@ -65,6 +65,8 @@
         .djs-context-pad {
         
             .entry {
+                // background-color: rgba(255, 255, 255, 0.6);
+                // box-shadow: 0 0 2px 1px rgba(255, 255, 255, 0.6);
         
                 &.bpmn-icon-intermediate-event-none {
                     display: none !important;
@@ -74,6 +76,10 @@
 
         .bjs-powered-by {
             display: none !important;
+        }
+
+        .bpmn-icon-settings:before {
+            content: '☰';
         }
     }
 

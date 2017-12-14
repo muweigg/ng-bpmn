@@ -46,6 +46,10 @@ export class PageModelerComponent implements OnInit {
     openPanel (businessObject) {
         this.businessObject = businessObject;
     }
+    
+    settingsPanel (businessObject) {
+        console.log('settingsPanel: ', businessObject);
+    }
 
     toggleModeler () {
         this.modeler = !this.modeler;

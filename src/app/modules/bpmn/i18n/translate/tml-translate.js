@@ -8,7 +8,7 @@ const typeMap = {
     'TextAnnotation': '文本注释',
 };
 
-module.exports = function customTranslate(template, replacements) {
+function customTranslate(template, replacements) {
     replacements = replacements || {};
 
     // Translate
@@ -19,3 +19,7 @@ module.exports = function customTranslate(template, replacements) {
         return typeMap[replacements[key]] || '{' + key + '}';
     });
 };
+
+module.exports = {
+    translate: [ 'value', customTranslate ]
+}

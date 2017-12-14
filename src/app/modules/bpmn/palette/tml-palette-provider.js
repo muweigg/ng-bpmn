@@ -19,7 +19,9 @@ function PaletteProvider(palette, create, elementFactory, spaceTool, lassoTool, 
     palette.registerProvider(this);
 }
 
-module.exports = PaletteProvider;
+module.exports = {
+    paletteProvider: [ 'type', PaletteProvider ]
+};
 
 PaletteProvider.$inject = [
     'palette',

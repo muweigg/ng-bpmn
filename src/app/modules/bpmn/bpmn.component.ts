@@ -6,6 +6,8 @@ import debounce from 'lodash/debounce';
 
 import newDiagramXML from './resource/new-diagram.bpmn';
 
+export const onSettings: EventEmitter<any> = new EventEmitter<any>();
+
 @Component({
     selector: 'bpmn',
     templateUrl: './bpmn.component.html',
@@ -19,6 +21,7 @@ export class BpmnComponent implements OnInit {
     @Input() navigated: boolean = false;
     @Input() tokenSimulation: boolean = false;
     @Output() onClick: EventEmitter<any> = new EventEmitter<any>();
+    @Output() onSettings: EventEmitter<any> = onSettings;
     @ViewChild('downloadDiagram') downloadDiagram: ElementRef;
     @ViewChild('downloadSVG') downloadSVG: ElementRef;
 
@@ -62,9 +65,6 @@ export class BpmnComponent implements OnInit {
         let options: any = {
             container: '#bpmn-canvas',
             keyboard: { bindTo: document },
-            additionalModules: [
-                paletteProviderModule,
-            ]
         }
         
         this.viewer = this.modeler
