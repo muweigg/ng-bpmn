@@ -250,7 +250,7 @@ export class BpmnComponent implements OnInit {
             'bpmn:startEvent': 0,
             'bpmn:endEvent': 10,
             'bpmn:exclusiveGateway': 1,
-            'bpmn:parallelGateway': 1,
+            'bpmn:parallelGateway': 4,
             'bpmn:task': 2,
             'bpmn:subProcess': 3
         };
