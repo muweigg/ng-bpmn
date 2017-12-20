@@ -38,6 +38,17 @@ export class PageModelerComponent implements OnInit {
     exportJSON () {
         console.log(this.bpmnModeler.exportJSON());
     }
+
+    nodePathHighlighted() {
+        let ids = [
+            'StartEvent_1',
+            'ExclusiveGateway_1kbxls2',
+            'StartEvent_1u8b44m',
+            'ExclusiveGateway_0trgzvx',
+            'Task_0s46biu',
+        ];
+        this.bpmnModeler.nodePathHighlighted(ids);
+    }
     
     destroy () {
         this.bpmnModeler.destroy();

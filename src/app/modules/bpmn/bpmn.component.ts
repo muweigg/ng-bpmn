@@ -2,6 +2,8 @@ import { Component, OnInit, ElementRef, ViewChild, ViewEncapsulation, Input, Sim
 import { HttpClient } from '@angular/common/http';
 import { BpmnService } from './service/bpmn.service';
 
+import defer from 'lodash/defer';
+import find from 'lodash/find';
 import debounce from 'lodash/debounce';
 
 import newDiagramXML from './resource/new-diagram.bpmn';
@@ -361,7 +363,18 @@ export class BpmnComponent implements OnInit {
     resetZoom () {
         if (!this.viewer) return;
         let canvas = this.viewer.get('canvas');
-        canvas.zoom('fit-viewport');
+        defer(() => canvas.zoom('fit-viewport'));
+    }
+
+    nodePathHighlighted(ids: Array<string> = []) {
+
+        if (!this.viewer || (ids && ids.length === 0)) return;
+        
+        const canvas = this.viewer.get('canvas');
+
+        ids.map(id => canvas.addMarker(id, 'completed'));
+
+        canvas.addMarker(ids[ids.length - 1], 'processing');
     }
 
     toggleHideKeyboardShortcuts () {
