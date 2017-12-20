@@ -366,15 +366,24 @@ export class BpmnComponent implements OnInit {
         defer(() => canvas.zoom('fit-viewport'));
     }
 
-    nodePathHighlighted(ids: Array<string> = []) {
+    nodePathHighlighted(ids: Array<string | Array<string>> = []) {
 
         if (!this.viewer || (ids && ids.length === 0)) return;
         
         const canvas = this.viewer.get('canvas');
 
-        ids.map(id => canvas.addMarker(id, 'completed'));
+        ids.map((id:any) => {
+            if (id instanceof Array) return;
+            canvas.addMarker(id, 'completed');
+        });
 
-        canvas.addMarker(ids[ids.length - 1], 'processing');
+        let lastId:any = ids[ids.length - 1];
+
+        if (lastId instanceof Array)
+            lastId.map(id => canvas.addMarker(id, 'processing'));
+        else
+            canvas.addMarker(lastId, 'processing');
+
     }
 
     toggleHideKeyboardShortcuts () {
