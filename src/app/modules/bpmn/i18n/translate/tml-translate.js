@@ -1,25 +1,33 @@
+const assign = require('lodash/assign');
 let translations = require('./zh_CN');
 
-const typeMap = {
-    'StartEvent': '开始',
-    'EndEvent': '结束',
-    'ExclusiveGateway': '排他网关',
-    'Task': '任务',
-    'TextAnnotation': '文本注释',
-};
+module.exports = function(language = {}) {
 
-function customTranslate(template, replacements) {
-    replacements = replacements || {};
+    translations = assign({}, translations, language);
 
-    // Translate
-    template = translations[template] || template;
+    const typeMap = {
+        'StartEvent': translations['Start Event'],
+        'EndEvent': translations['End Event'],
+        'ExclusiveGateway': translations['Exclusive Gateway'],
+        'Task': translations['Task'],
+        'TextAnnotation': translations['Text Annotation'],
+    };
 
-    // Replace
-    return template.replace(/{([^}]+)}/g, function(_, key) {
-        return typeMap[replacements[key]] || '{' + key + '}';
-    });
-};
+    console.log('translations: ', translations, typeMap);
 
-module.exports = {
-    translate: [ 'value', customTranslate ]
+    function customTranslate(template, replacements) {
+        replacements = replacements || {};
+
+        // Translate
+        template = translations[template] || template;
+
+        // Replace
+        return template.replace(/{([^}]+)}/g, function(_, key) {
+            return typeMap[replacements[key]] || '{' + key + '}';
+        });
+    };
+
+    return {
+        translate: [ 'value', customTranslate ]
+    }
 }

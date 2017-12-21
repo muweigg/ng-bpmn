@@ -20,7 +20,7 @@ export class BpmnService {
         additionalModules: [
             PaletteProviderModule,
             MinimapModule,
-            TranslateModule,
+            // TranslateModule({}),
         ],
         moddleExtensions: {
             tml: tmlOptions
@@ -52,7 +52,7 @@ export class BpmnService {
         return new BpmnModeler(options);
     }
 
-    getPaletteProviderModule () {
-        return PaletteProviderModule;
+    getTranslateModule (language) {
+        return TranslateModule(language);
     }
 }

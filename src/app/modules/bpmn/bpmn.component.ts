@@ -22,6 +22,7 @@ export class BpmnComponent implements OnInit {
     @Input() modeler: boolean = false;
     @Input() navigated: boolean = false;
     @Input() tokenSimulation: boolean = false;
+    @Input() language: any = {};
     @Output() onClick: EventEmitter<any> = new EventEmitter<any>();
     @Output() onSettings: EventEmitter<any> = onSettings;
     @ViewChild('downloadDiagram') downloadDiagram: ElementRef;
@@ -63,10 +64,11 @@ export class BpmnComponent implements OnInit {
     
     createViewer () {
         let xml: string = this.xml === '' ? newDiagramXML: this.xml;
-        let paletteProviderModule = this.bpmnService.getPaletteProviderModule();
+        let translateModule = this.bpmnService.getTranslateModule(this.language);
         let options: any = {
             container: '#bpmn-canvas',
             keyboard: { bindTo: document },
+            additionalModules: [ translateModule ],
         }
         
         this.viewer = this.modeler

@@ -87,6 +87,7 @@ module.exports = {
     "Timer Start Event (non-interrupting)": '定时器开始事件 (非中断)',
     "Transaction": '事物',
     "User Task": '审核任务',
+    "Text Annotation": "文本注解",
     "Settings Options": "任务配置",
     "correcting missing bpmnElement on {plane} to {rootElement}": "correcting missing bpmnElement on {plane} to {rootElement}",
     "element {element} referenced by {referenced}#{property} not yet drawn": "element {element} referenced by {referenced}#{property} not yet drawn",
