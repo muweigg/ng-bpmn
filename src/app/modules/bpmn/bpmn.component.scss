@@ -90,17 +90,17 @@
 
                 .djs-visual {
 
-                    > path {
+                    /* > path {
                         stroke: #ccc !important;
-                    }
+                    } */
 
                     rect, polygon, circle {
-                        stroke: #e6e6e6 !important;
+                        stroke: #999 !important;
                     }
 
                     rect + text,
                     polygon + path {
-                        fill: #e6e6e6 !important;
+                        fill: #999 !important;
                     }
                 }
             }
@@ -110,7 +110,7 @@
                 .djs-visual {
 
                     rect, polygon, circle {
-                        stroke: #999 !important;
+                        stroke: #333 !important;
                     }
 
                     rect + text,
