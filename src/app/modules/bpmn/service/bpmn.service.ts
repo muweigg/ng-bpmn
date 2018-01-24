@@ -9,6 +9,7 @@ const TokenSimulationModule = require('bpmn-js-token-simulation/lib/viewer');
 const MinimapModule = require('diagram-js-minimap');
 const TranslateModule = require('../i18n/translate/tml-translate');
 const PaletteProviderModule = require('../palette/tml-palette-provider');
+const TMLRenderder = require('../renderer/tml-renderer');
 import TMLContextPadProviderModule from '../context-pad/tml-context-pad-provider';
 
 const tmlOptions = require('../resource/tml-options.json');
@@ -20,7 +21,7 @@ export class BpmnService {
         additionalModules: [
             PaletteProviderModule,
             MinimapModule,
-            // TranslateModule({}),
+            TMLRenderder
         ],
         moddleExtensions: {
             tml: tmlOptions

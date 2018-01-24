@@ -1,4 +1,5 @@
 :host {
+    font-size: 14px;
 
     ::ng-deep {
         
@@ -83,58 +84,6 @@
             content: '☰';
         }
 
-        // custom color
-        .djs-element {
-            
-            &.djs-shape, &.djs-connection {
-
-                .djs-visual {
-
-                    /* > path {
-                        stroke: #ccc !important;
-                    } */
-
-                    rect, polygon, circle {
-                        stroke: #999 !important;
-                    }
-
-                    rect + text,
-                    polygon + path {
-                        fill: #999 !important;
-                    }
-                }
-            }
-
-            &.completed {
-
-                .djs-visual {
-
-                    rect, polygon, circle {
-                        stroke: #333 !important;
-                    }
-
-                    rect + text,
-                    polygon + path {
-                        fill: #333 !important;
-                    }
-                }
-            }
-
-            &.processing {
-
-                .djs-visual {
-
-                    rect, polygon, circle {
-                        stroke: #0099cc !important;
-                    }
-
-                    rect + text,
-                    polygon + path {
-                        fill: #333 !important;
-                    }
-                }
-            }
-        }
     }
 
     #bpmn-canvas {
