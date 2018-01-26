@@ -203,7 +203,7 @@ function TMLRenderer(eventBus, styles, pathMap, canvas, priority) {
             'stroke': '#c1ddf4'
         });
         if (text) {
-            svgAttr(bpmnShape.nextSibling, {
+            svgAttr(text, {
                 'fill': '#008cff'
             });
         }
@@ -213,7 +213,7 @@ function TMLRenderer(eventBus, styles, pathMap, canvas, priority) {
         const text = bpmnShape.nextSibling;
         svgAttr(bpmnShape, 'stroke', '#c1ddf4');
         if (text) {
-            svgAttr(bpmnShape.nextSibling, {
+            svgAttr(text, {
                 'fill': '#008cff'
             });
         }
@@ -223,7 +223,7 @@ function TMLRenderer(eventBus, styles, pathMap, canvas, priority) {
         const text = bpmnShape.nextSibling;
         svgAttr(bpmnShape, 'stroke', '#c1ddf4');
         if (text) {
-            svgAttr(bpmnShape.nextSibling, {
+            svgAttr(text, {
                 'fill': '#008cff',
                 'stroke': '#008cff'
             });
