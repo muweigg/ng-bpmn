@@ -8,12 +8,14 @@ var domQuery = require('min-dom/lib/query');
 
 var is = require('bpmn-js/lib/util/ModelUtil').is,
     isAny = require('bpmn-js/lib/features/modeling/util/ModelingUtil').isAny,
+    TextUtil = require('diagram-js/lib/util/Text'),
     Ids = require('ids'),
     RENDERER_IDS = new Ids();
 
 var svgAppend = require('tiny-svg/lib/append'),
     svgAttr = require('tiny-svg/lib/attr'),
-    svgCreate = require('tiny-svg/lib/create');
+    svgCreate = require('tiny-svg/lib/create'),
+    svgClasses = require('tiny-svg/lib/classes');
 
 function TMLRenderer(eventBus, styles, pathMap, canvas, priority) {
     BpmnRenderer.call(this, eventBus, styles, pathMap, canvas, priority || 1200);
@@ -21,6 +23,13 @@ function TMLRenderer(eventBus, styles, pathMap, canvas, priority) {
     var computeStyle = styles.computeStyle;
     var rendererId = RENDERER_IDS.next();
     var markers = {};
+    var textUtil = new TextUtil({
+        style: {
+            fontFamily: 'Arial, sans-serif',
+            fontSize: 14
+        },
+        size: { width: 100 }
+    });
 
     function addMarker(id, options) {
         var attrs = assign({
@@ -188,6 +197,30 @@ function TMLRenderer(eventBus, styles, pathMap, canvas, priority) {
         }
     }
 
+    function renderLabel(parentGfx, label, options) {
+        var text = textUtil.createText(label || '', options);
+        svgClasses(text).add('djs-label');
+        svgAppend(parentGfx, text);
+
+        return text;
+    }
+    
+    function renderEmbeddedLabel(parentGfx, element, align) {
+        var semantic = element.businessObject;
+
+        return renderLabel(parentGfx, semantic.name, {
+            box: element,
+            align: align,
+            padding: 5,
+            style: {
+                fill: '#008cff',
+                fontSize: '14px',
+                fontWeight: 'bold',
+                fontFamily: 'Microsoft YaHei'
+            }
+        });
+    }
+
     function startEvent(bpmnShape) {
         svgAttr(bpmnShape, 'stroke', '#9bd040');
     }
@@ -196,27 +229,21 @@ function TMLRenderer(eventBus, styles, pathMap, canvas, priority) {
         svgAttr(bpmnShape, 'stroke', '#f44336');
     }
 
-    function task(bpmnShape) {
+    function task(bpmnShape, parentGfx, element) {
         const text = bpmnShape.nextSibling;
+        renderEmbeddedLabel(parentGfx, element, 'center-middle');
         svgAttr(bpmnShape, {
             'fill': '#e5f6ff',
             'stroke': '#c1ddf4'
         });
-        if (text) {
-            svgAttr(text, {
-                'fill': '#008cff'
-            });
-        }
+        if (text) parentGfx.removeChild(text);
     }
 
-    function subProcess(bpmnShape) {
+    function subProcess(bpmnShape, parentGfx, element) {
         const text = bpmnShape.nextSibling;
-        svgAttr(bpmnShape, 'stroke', '#c1ddf4');
-        if (text) {
-            svgAttr(text, {
-                'fill': '#008cff'
-            });
-        }
+        renderEmbeddedLabel(parentGfx, element, 'center-top');
+        svgAttr(bpmnShape, {'stroke': '#c1ddf4'});
+        if (text) parentGfx.removeChild(text);
     }
 
     function gateway(bpmnShape) {
@@ -233,7 +260,6 @@ function TMLRenderer(eventBus, styles, pathMap, canvas, priority) {
     function label(bpmnShape) {
         svgAttr(bpmnShape, {
             'fill': '#008cff',
-            // 'font-size': '14px',
         });
     }
 
@@ -266,9 +292,9 @@ function TMLRenderer(eventBus, styles, pathMap, canvas, priority) {
         return is(element, 'bpmn:BaseElement');
     };
 
-    this.drawShape = function (parent, shape) {
-        const bpmnShape = this.drawBpmnShape(parent, shape), func = colors[shape.type];
-        if (typeof func === 'function') func(bpmnShape);
+    this.drawShape = function (parentGfx, element) {
+        const bpmnShape = this.drawBpmnShape(parentGfx, element), func = colors[element.type];
+        if (typeof func === 'function') func(bpmnShape, parentGfx, element);
         // else colors['default'](bpmnShape);
         return bpmnShape;
     };
