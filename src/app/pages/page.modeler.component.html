@@ -11,6 +11,10 @@
     <button (click)="toggleTokenSimulation();">
         Toggle Token Simulation {{ tokenSimulation }}
     </button>
+    
+    <button (click)="toggleAllowDownload();">
+        Toggle allow download {{ allowDownload }}
+    </button>
 
     <br>
     
@@ -46,6 +50,7 @@
             [modeler]="modeler"
             [navigated]="navigated"
             [tokenSimulation]="tokenSimulation"
+            [allowDownload]="allowDownload"
             [language]="language"
             (onClick)="openPanel($event);"
             (onSettings)="settingsPanel($event)"></bpmn>

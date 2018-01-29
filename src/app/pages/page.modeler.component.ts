@@ -16,6 +16,7 @@ export class PageModelerComponent implements OnInit {
     modeler: boolean = false;
     navigated: boolean = false;
     tokenSimulation: boolean = false;
+    allowDownload: boolean = false;
     language: any = {
         "Activate the global connect tool": '关联',
         "Activate the hand tool": '拖动',
@@ -60,14 +61,84 @@ export class PageModelerComponent implements OnInit {
     }
 
     nodePathHighlighted() {
+
         let ids = [
-            'StartEvent_1',
-            'ExclusiveGateway_1kbxls2',
-            'StartEvent_1u8b44m',
-            'ExclusiveGateway_0trgzvx',
-            'Task_0s46biu',
-            ['ExclusiveGateway_1wijtyo', 'Task_07qxgpe'],
+            {
+                id: 'ExclusiveGateway_1kbxls2',
+                color: {
+                    task: {
+                        'fill': '#d0eba4',
+                        'stroke': '#d0eba4',
+                    },
+                    text: {
+                        'fill': '#668431',
+                        'stroke': '#668431',
+                    }
+                }
+            },
+            {
+                id: 'Task_0n9lj4c',
+                color: {
+                    task: {
+                        'stroke': '#ff9800',
+                    },
+                    text: {
+                        'fill': '#ff9800',
+                    }
+                }
+            },
+            {
+                id: 'ExclusiveGateway_0trgzvx',
+                color: {
+                    task: {
+                        'fill': '#d0eba4',
+                        'stroke': '#d0eba4',
+                    },
+                    text: {
+                        'fill': '#668431',
+                        'stroke': '#668431',
+                    }
+                }
+            },
+            {
+                id: 'Task_0s46biu',
+                color: {
+                    task: {
+                        'fill': '#d0eba4',
+                        'stroke': '#d0eba4',
+                    },
+                    text: {
+                        'fill': '#668431',
+                    }
+                }
+            },
+            {
+                id: 'ExclusiveGateway_1wijtyo',
+                color: {
+                    task: {
+                        'fill': '#fff0be',
+                        'stroke': '#ff9800',
+                    },
+                    text: {
+                        'fill': '#ff9800',
+                        'stroke': '#ff9800',
+                    }
+                }
+            },
+            {
+                id: 'Task_07qxgpe',
+                color: {
+                    task: {
+                        'fill': '#fff0be',
+                        'stroke': '#ff9800',
+                    },
+                    text: {
+                        'fill': '#ff9800',
+                    }
+                }
+            },
         ];
+        
         this.bpmnModeler.nodePathHighlighted(ids);
     }
     
@@ -93,5 +164,9 @@ export class PageModelerComponent implements OnInit {
     
     toggleTokenSimulation () {
         this.tokenSimulation = !this.tokenSimulation;
+    }
+    
+    toggleAllowDownload () {
+        this.allowDownload = !this.allowDownload;
     }
 }

@@ -5,6 +5,7 @@ import { BpmnService } from './service/bpmn.service';
 import defer from 'lodash/defer';
 import find from 'lodash/find';
 import debounce from 'lodash/debounce';
+import svgAttr from 'tiny-svg/lib/attr';
 
 import newDiagramXML from './resource/new-diagram.bpmn';
 
@@ -22,6 +23,7 @@ export class BpmnComponent implements OnInit {
     @Input() modeler: boolean = false;
     @Input() navigated: boolean = false;
     @Input() tokenSimulation: boolean = false;
+    @Input() allowDownload: boolean = false;
     @Input() language: any = {};
     @Output() onClick: EventEmitter<any> = new EventEmitter<any>();
     @Output() onSettings: EventEmitter<any> = onSettings;
@@ -369,23 +371,18 @@ export class BpmnComponent implements OnInit {
         defer(() => canvas.zoom('fit-viewport'));
     }
 
-    nodePathHighlighted(ids: Array<string | Array<string>> = []) {
+    nodePathHighlighted(ids: Array<any> = []) {
 
         if (!this.viewer || (ids && ids.length === 0)) return;
         
-        const canvas = this.viewer.get('canvas');
+        function setColor (item) {
+            const task = document.querySelector(`g[data-element-id='${item.id}'] .djs-visual`).children[0];
+            const text = task.nextSibling;
+            svgAttr(task, item.color.task);
+            if (text && item.color.text) svgAttr(text, item.color.text);
+        }
 
-        ids.map((id:any) => {
-            if (id instanceof Array) return;
-            canvas.addMarker(id, 'completed');
-        });
-
-        let lastId:any = ids[ids.length - 1];
-
-        if (lastId instanceof Array)
-            lastId.map(id => canvas.addMarker(id, 'processing'));
-        else
-            canvas.addMarker(lastId, 'processing');
+        ids.map((item:any) => setColor(item));
 
     }
 

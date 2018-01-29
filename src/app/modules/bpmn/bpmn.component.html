@@ -48,7 +48,7 @@
     </div>
 </div>
 
-<div class="bpmn-downloads">
+<div class="bpmn-downloads" [hidden]="!allowDownload">
     <a #downloadDiagram href="javascript:" title="download BPMN diagram">
         <span class="app-icon-download"></span>
     </a>
