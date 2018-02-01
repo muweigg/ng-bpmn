@@ -21,7 +21,7 @@ export class BpmnComponent implements OnInit {
     // 当前已加载 XML
     xml: string = '';
     @Input() modeler: boolean = false;
-    @Input() navigated: boolean = false;
+    @Input() navigated: boolean = true;
     @Input() tokenSimulation: boolean = false;
     @Input() allowDownload: boolean = false;
     @Input() language: any = {};

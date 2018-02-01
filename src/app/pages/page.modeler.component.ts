@@ -14,7 +14,7 @@ export class PageModelerComponent implements OnInit {
     @ViewChild('bpmnModeler') bpmnModeler: BpmnComponent;
 
     modeler: boolean = false;
-    navigated: boolean = false;
+    navigated: boolean = true;
     tokenSimulation: boolean = false;
     allowDownload: boolean = false;
     language: any = {
