@@ -1,6 +1,6 @@
 'use strict';
 
-import { onSettings } from '../bpmn.component';
+import { onSettings, onDelete } from '../bpmn.component';
 
 const assign = require('lodash/assign'),
     isArray = require('lodash/isArray'),
@@ -92,8 +92,12 @@ TMLContextPadProvider.prototype.getContextPadEntries = function (element) {
                 action: {
                     click: (e) => {
                         let name = businessObject.name ? businessObject.name : nameIdx[businessObject.$type];
-                        let isAllowed = window.confirm(`确认移除 "${name}" ？`);
-                        if (isAllowed) removeElement(e);
+                        e.nodeName = name;
+                        e.businessObject = businessObject;
+                        e.remove = () => removeElement(e);
+                        onDelete.emit(e);
+                        // let isAllowed = window.confirm(`确认移除 "${name}" ？`);
+                        // if (isAllowed) removeElement(e);
                     },
                     dragstart: removeElement
                 }

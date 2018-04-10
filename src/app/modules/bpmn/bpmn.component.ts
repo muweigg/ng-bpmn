@@ -10,6 +10,7 @@ import svgAttr from 'tiny-svg/lib/attr';
 import newDiagramXML from './resource/new-diagram.bpmn';
 
 export const onSettings: EventEmitter<any> = new EventEmitter<any>();
+export const onDelete: EventEmitter<any> = new EventEmitter<any>();
 
 @Component({
     selector: 'bpmn',
@@ -26,6 +27,7 @@ export class BpmnComponent implements OnInit {
     @Input() allowDownload: boolean = false;
     @Input() language: any = {};
     @Output() onClick: EventEmitter<any> = new EventEmitter<any>();
+    @Output() onDelete: EventEmitter<any> = onDelete;
     @Output() onSettings: EventEmitter<any> = onSettings;
     @ViewChild('downloadDiagram') downloadDiagram: ElementRef;
     @ViewChild('downloadSVG') downloadSVG: ElementRef;

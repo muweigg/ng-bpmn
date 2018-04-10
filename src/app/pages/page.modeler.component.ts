@@ -149,6 +149,12 @@ export class PageModelerComponent implements OnInit {
     openPanel (businessObject) {
         this.businessObject = businessObject;
     }
+
+    deleteNode (e) {
+        console.log('业务对象: ', e.businessObject);
+        let isAllowed = window.confirm(`确认移除 "${e.nodeName}" ？`);
+        if (isAllowed) e.remove();
+    }
     
     settingsPanel (businessObject) {
         console.log('settingsPanel: ', businessObject);
