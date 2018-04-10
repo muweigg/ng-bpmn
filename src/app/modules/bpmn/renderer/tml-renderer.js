@@ -279,6 +279,7 @@ function TMLRenderer(eventBus, styles, pathMap, canvas, priority) {
         'bpmn:EndEvent': endEvent,
         'bpmn:Task': task,
         'bpmn:UserTask': task,
+        'bpmn:ServiceTask': task,
         'bpmn:SubProcess': subProcess,
         'bpmn:ExclusiveGateway': gateway,
         'bpmn:ParallelGateway': gateway,
